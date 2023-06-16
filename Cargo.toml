@@ -1,0 +1,17 @@
+[package]
+name = "alpaca_api_client"
+version = "0.1.0"
+edition = "2021"
+authors=["Jon Karrer <karrerjon@gmail.com>"]
+description = "Unofficial Alpaca API Client"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/jonkarrer/alpaca_api_client"
+readme = "README.md"
+keywords = ["stocks", "trading", "alpaca", "api", "client"]
+categories = ["finance::api-client"]
+
+[dependencies]
+dotenv = "0.15.0"
+serde = {version = "1.0.159", features = ["derive"]}
+serde_json = "1.0.95"
+ureq = { version = "*", features = ["json"] }
