@@ -1,6 +1,6 @@
 # Alpaca API Client in Rust
 
-> A robust, user-friendly client for interacting with the Alpaca Trading API, built with Rust.
+> Do Not Use This Package In Any Serious Capcity. Very Unstable and Untested
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
 ![Version 0.1.0](https://img.shields.io/badge/version-1.0.0-blue.svg)
