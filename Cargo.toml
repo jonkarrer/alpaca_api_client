@@ -8,7 +8,7 @@ license = "MIT/Apache-2.0"
 repository = "https://github.com/jonkarrer/alpaca_api_client"
 readme = "README.md"
 keywords = ["stocks", "trading", "alpaca", "api", "client"]
-categories = ["finance::api-client"]
+categories = ["finance"]
 
 [dependencies]
 dotenv = "0.15.0"
