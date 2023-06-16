@@ -14,4 +14,4 @@ categories = ["finance::api-client"]
 dotenv = "0.15.0"
 serde = {version = "1.0.159", features = ["derive"]}
 serde_json = "1.0.95"
-ureq = { version = "*", features = ["json"] }
+ureq = { version = "2.7.0", features = ["json"] }
