@@ -14,6 +14,7 @@ pub struct Trade {
     pub z: String,      // Tape
 }
 
+/// Get a trade for a single symbol
 pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Vec<Trade> {
     let url = format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/trades");
     let address = match query {
@@ -60,6 +61,7 @@ pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Vec<Trade> {
 }
 
 pub type MultiTrades = HashMap<String, Vec<Trade>>;
+/// Get trades for multiple symbols
 pub fn get_multi_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiTrades {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/trades?symbols={}",
@@ -111,6 +113,7 @@ pub fn get_multi_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiTra
     trades_map
 }
 
+/// Get latest trade for single symbol
 pub fn get_latest_trade(stock_symbol: &str) -> Trade {
     let address = format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/trades/latest");
 
@@ -130,6 +133,7 @@ pub fn get_latest_trade(stock_symbol: &str) -> Trade {
 }
 
 pub type MultiLatestTrades = HashMap<String, Trade>;
+/// Get latest trades for multiple symobls
 pub fn get_multi_latest_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiLatestTrades {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/trades/latest?symbols={}",

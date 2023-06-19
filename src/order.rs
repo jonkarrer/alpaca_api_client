@@ -67,6 +67,7 @@ pub enum OrderSide {
     Sell,
 }
 
+/// Place a market order
 pub fn place_market_order(stock_symbol: &str, qty: f32, trade_side: OrderSide) -> Order {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
@@ -90,6 +91,7 @@ pub fn place_market_order(stock_symbol: &str, qty: f32, trade_side: OrderSide) -
     res.expect("No Order In Response")
 }
 
+/// Place a trailing stop order
 pub fn place_trailing_stop_order(stock_symbol: &str, qty: f32, trail_percent: f32) -> Order {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
@@ -111,6 +113,7 @@ pub fn place_trailing_stop_order(stock_symbol: &str, qty: f32, trail_percent: f3
     res.expect("No Order In Response")
 }
 
+/// Place a bracket order
 pub fn place_bracket_order(
     stock_symbol: &str,
     qty: f32,

@@ -23,6 +23,7 @@ pub struct Position {
     pub change_today: String,
 }
 
+/// Get a position for a stock symbol
 pub fn get_position(stock_symbol: &str) -> Position {
     let address = format!("https://paper-api.alpaca.markets/v2/positions/{stock_symbol}");
 
