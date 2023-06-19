@@ -34,6 +34,8 @@ pub fn get_position(stock_symbol: &str) -> Position {
         .expect("Could Not Parse Response Into Json");
     r
 }
+
+/// Get all open positions
 pub fn get_open_positions() -> Vec<Position> {
     let address = "https://paper-api.alpaca.markets/v2/positions";
 

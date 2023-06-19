@@ -61,6 +61,7 @@ pub struct Order {
     pub hwm: Option<String>,
 }
 
+/// Buy or sell
 #[derive(Debug, Clone, Copy)]
 pub enum OrderSide {
     Buy,
@@ -151,6 +152,7 @@ pub fn place_bracket_order(
     res.expect("No Order In Response")
 }
 
+/// Get all orders for account
 pub fn get_orders(query: Option<&str>) -> Vec<Order> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
     let address = match query {
@@ -165,6 +167,7 @@ pub fn get_orders(query: Option<&str>) -> Vec<Order> {
         .expect("Could Not Parse Response Into Json")
 }
 
+/// Get an order by it's id
 pub fn get_order_by_id(order_id: &str) -> Order {
     let address = format!("https://paper-api.alpaca.markets/v2/orders/{order_id}");
 

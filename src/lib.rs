@@ -1,11 +1,31 @@
 //! # Alpaca API Client (unofficial)
-//!
-//! <a href="https://alpaca.markets/">Alpaca</a> is a trading platform for developers and app makers
+//!<div align="center">
+//!  <!-- Version -->
+//!  <a href="https://crates.io/crates/alpaca_api_client">
+//!    <img src="https://img.shields.io/crates/v/alpaca_api_client.svg?style=flat-square"
+//!    alt="Crates.io version" />
+//!  </a>
+//!  <!-- Docs -->
+//!  <a href="https://docs.rs/alpaca_api_client">
+//!    <img src="https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square"
+//!      alt="docs.rs docs" />
+//!  </a>
+//!  <!-- Downloads -->
+//!  <a href="https://crates.io/crates/alpaca_api_client">
+//!    <img src="https://img.shields.io/crates/d/alpaca_api_client.svg?style=flat-square"
+//!      alt="Crates.io downloads" />
+//!  </a>
+//!</div>
 //!
 //! **DO NOT USE IN A SERIOUS PROJECT, NOT LIABLE FOR ANY ISSUES**
 //!
-//! Provides:
-//! * Quick access to SOME of Alpaca's API endpoints
+//! ## Introduction
+//!
+//! <a href="https://alpaca.markets/">Alpaca</a> is a trading platform for developers and app makers,
+//! and they provide various endpoints to access over http. The goal of this package is to provide
+//! the bare minimum tools for using the Alpaca API, and to learn more about open source software building.
+//! This is not a batteries included package yet, and still requires a lot of testing.
+//!
 //!
 //! ## Quick Examples
 //!
@@ -28,7 +48,7 @@
 //!   "LYV", "IQ", "HUYA", "DOYU", "VIAV",
 //! ];
 //!
-//! let multi_bars: MultiBars = get_multi_bars(watchlist, "1Day", Some("start=2022-01-01"));
+//! let multi_bars: MultiBars = get_multi_bars(&watchlist, "1Day", Some("start=2022-01-01"));
 //! ```
 //!
 //! Place market order
