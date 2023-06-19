@@ -21,6 +21,7 @@ pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Vec<Trade> {
     };
 
     #[derive(Deserialize)]
+    #[allow(dead_code)]
     struct Res {
         trades: Option<Vec<Trade>>,
         symbol: String,
