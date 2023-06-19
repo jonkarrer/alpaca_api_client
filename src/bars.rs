@@ -15,9 +15,51 @@ pub struct Bar {
     pub vw: f32,   // Volume weighted average
 }
 
-pub type MultiBars = HashMap<String, Vec<Bar>>;
+pub type Bars = Vec<Bar>;
 
-pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Vec<Bar> {
+pub trait BarSession {
+    fn get_opens(&self) -> Vec<f32>;
+    fn get_closes(&self) -> Vec<f32>;
+    fn get_highs(&self) -> Vec<f32>;
+    fn get_lows(&self) -> Vec<f32>;
+    fn get_last_bar(&self) -> &Bar;
+}
+
+impl BarSession for Vec<Bar> {
+    fn get_opens(&self) -> Vec<f32> {
+        let mut opens = Vec::new();
+        for item in self {
+            opens.push(item.o);
+        }
+        opens
+    }
+    fn get_closes(&self) -> Vec<f32> {
+        let mut closes = Vec::new();
+        for item in self {
+            closes.push(item.c);
+        }
+        closes
+    }
+    fn get_highs(&self) -> Vec<f32> {
+        let mut highs = Vec::new();
+        for item in self {
+            highs.push(item.h);
+        }
+        highs
+    }
+    fn get_lows(&self) -> Vec<f32> {
+        let mut lows = Vec::new();
+        for item in self {
+            lows.push(item.l);
+        }
+        lows
+    }
+    fn get_last_bar(&self) -> &Bar {
+        &self[&self.len() - 1]
+    }
+}
+
+pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Bars {
     let url =
         format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/bars?timeframe={timeframe}");
     let address = match query {
@@ -26,9 +68,10 @@ pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Vec
     };
 
     #[derive(Deserialize)]
+    #[allow(dead_code)]
     struct Res {
-        bars: Option<Vec<Bar>>,
-        // symbol: String,
+        bars: Option<Bars>,
+        symbol: String,
         next_page_token: Option<String>,
     }
 
@@ -63,6 +106,7 @@ pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Vec
     bars
 }
 
+pub type MultiBars = HashMap<String, Bars>;
 pub fn get_multi_bars(stock_symbols: &[&str], timeframe: &str, query: Option<&str>) -> MultiBars {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/bars?timeframe={timeframe}&symbols={}",

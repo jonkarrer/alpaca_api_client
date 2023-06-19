@@ -114,9 +114,10 @@ pub fn get_latest_trade(stock_symbol: &str) -> Trade {
     let address = format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/trades/latest");
 
     #[derive(Deserialize)]
+    #[allow(dead_code)]
     struct Res {
         trade: Option<Trade>,
-        //symbol: String,
+        symbol: String,
     }
     let r: Res = request("GET", &address)
         .call()
