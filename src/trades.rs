@@ -2,6 +2,7 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// A single trade object
 #[derive(Deserialize, Debug)]
 pub struct Trade {
     pub t: String,      // Timestamp

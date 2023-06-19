@@ -24,6 +24,7 @@ pub enum OrderStatus {
     Suspended,
 }
 
+/// A single order object
 #[derive(Deserialize, Debug)]
 pub struct Order {
     pub id: String,

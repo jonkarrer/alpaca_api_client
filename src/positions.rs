@@ -1,6 +1,7 @@
 use super::request;
 use serde::Deserialize;
 
+/// The response object for the position endpoint
 #[derive(Deserialize, Debug)]
 pub struct Position {
     pub asset_id: String,

@@ -1,6 +1,7 @@
 use super::request;
 use serde::Deserialize;
 
+/// The response object for account endpoint
 #[derive(Deserialize, Debug)]
 pub struct Account {
     pub account_blocked: bool,
@@ -36,6 +37,7 @@ pub struct Account {
     pub transfers_blocked: bool,
 }
 
+/// Get your account details
 pub fn get_account() -> Account {
     let address = "https://paper-api.alpaca.markets/v2/account";
 

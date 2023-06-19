@@ -3,7 +3,7 @@
 Do Not Use This Package In Any Serious Capcity. Untested and still unstable. A WORK IN PROGRESS.
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
-![Version 0.1.3](https://img.shields.io/badge/version-0.1.3-blue.svg)
+![Version 0.1.4](https://img.shields.io/badge/version-0.1.4-blue.svg)
 
 ## Table of Contents
 
@@ -47,7 +47,7 @@ APCA_API_SECRET_KEY=
 Simply import what you need.
 
 ```rust
-use crate::client::{get_multi_bars, MultiBars};
+use alpaca_api_client{get_multi_bars, MultiBars};
 
 let watchlist: [&str; 30] = [
     "META", "DIS", "CMCSA", "VZ", "T", "CHTR", "NFLX", "TMUS", "TWTR", "FOXA", "FOX", "DISH",

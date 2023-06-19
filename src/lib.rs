@@ -1,3 +1,45 @@
+//! # Alpaca API Client (unofficial)
+//!
+//! https://alpaca.markets/ is a trading platform for developers and app makers
+//!
+//! **DO NOT USE IN A SERIOUS PROJECT, NOT LIABLE FOR ANY ISSUES**
+//!
+//! Provides:
+//! * Quick access to SOME of Alpaca's API endpoints
+//!
+//! ## Quick Examples
+//!
+//! Get bars for a single stock
+//!
+//! ```no run
+//! use alpaca_api_client::get_bars;
+//!
+//! let bars = get_bars("BTU", "1Day", Some("start=2023-02-23"));
+//! ```
+//!
+//! Get bars for multiple symbols
+//!
+//! ```no run
+//! use alpaca_api_client::get_multi_bars;
+//!
+//! let watchlist: [&str; 30] = [
+//!   "META", "DIS", "CMCSA", "VZ", "T", "CHTR", "NFLX", "TMUS", "TWTR", "FOXA", "FOX", "DISH",
+//!   "CBS", "OMC", "TME", "TTWO", "EA", "ATVI", "ZM", "MTCH", "IAC", "NTES", "BIDU", "ROKU", "SPOT",
+//!   "LYV", "IQ", "HUYA", "DOYU", "VIAV",
+//! ];
+//!
+//! let multi_bars: MultiBars = get_multi_bars(watchlist, "1Day", Some("start=2022-01-01"));
+//! ```
+//!
+//! Place market order
+//!
+//! ```no run
+//! use alpaca_api_client::{place_market_order, OrderSide};
+//!
+//! let order = place_market_order("SO", 3.0, OrderSide::Buy);
+//! ```
+//!
+
 use dotenv::dotenv;
 use ureq::Request;
 

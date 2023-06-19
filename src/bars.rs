@@ -2,7 +2,7 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-// A Bar is a candle in stock market terms
+/// A single bar object
 #[derive(Deserialize, Debug)]
 pub struct Bar {
     pub t: String, // Timestamp
@@ -17,6 +17,7 @@ pub struct Bar {
 
 pub type Bars = Vec<Bar>;
 
+/// Getters for Bars
 pub trait BarSession {
     fn get_opens(&self) -> Vec<f32>;
     fn get_closes(&self) -> Vec<f32>;
@@ -59,6 +60,7 @@ impl BarSession for Vec<Bar> {
     }
 }
 
+/// Get bars for a single stock
 pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Bars {
     let url =
         format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/bars?timeframe={timeframe}");
@@ -107,6 +109,8 @@ pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Bar
 }
 
 pub type MultiBars = HashMap<String, Bars>;
+
+/// Get bars for multiple stocks
 pub fn get_multi_bars(stock_symbols: &[&str], timeframe: &str, query: Option<&str>) -> MultiBars {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/bars?timeframe={timeframe}&symbols={}",

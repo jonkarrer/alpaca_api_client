@@ -1,6 +1,7 @@
 use super::request;
 use serde::Deserialize;
 
+/// The response object for activities endpoint
 #[derive(Deserialize, Debug)]
 pub struct TradeActivity {
     pub activity_type: String,
@@ -16,6 +17,7 @@ pub struct TradeActivity {
     pub r#type: String,
 }
 
+/// Get trade activity for account
 pub fn get_trade_activity() -> Vec<TradeActivity> {
     let address = "https://paper-api.alpaca.markets/v2/account/activities?activity_types=FILL";
 
