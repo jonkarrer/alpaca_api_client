@@ -1,6 +1,6 @@
 //! # Alpaca API Client (unofficial)
 //!
-//! https://alpaca.markets/ is a trading platform for developers and app makers
+//! <a href="https://alpaca.markets/">Alpaca</a> is a trading platform for developers and app makers
 //!
 //! **DO NOT USE IN A SERIOUS PROJECT, NOT LIABLE FOR ANY ISSUES**
 //!
@@ -11,7 +11,7 @@
 //!
 //! Get bars for a single stock
 //!
-//! ```no run
+//! ```rust
 //! use alpaca_api_client::get_bars;
 //!
 //! let bars = get_bars("BTU", "1Day", Some("start=2023-02-23"));
@@ -19,7 +19,7 @@
 //!
 //! Get bars for multiple symbols
 //!
-//! ```no run
+//! ```rust
 //! use alpaca_api_client::get_multi_bars;
 //!
 //! let watchlist: [&str; 30] = [
@@ -33,7 +33,7 @@
 //!
 //! Place market order
 //!
-//! ```no run
+//! ```rust
 //! use alpaca_api_client::{place_market_order, OrderSide};
 //!
 //! let order = place_market_order("SO", 3.0, OrderSide::Buy);

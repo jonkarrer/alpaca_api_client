@@ -47,7 +47,7 @@ APCA_API_SECRET_KEY=
 Simply import what you need.
 
 ```rust
-use alpaca_api_client{get_multi_bars, MultiBars};
+use alpaca_api_client::{get_multi_bars, MultiBars};
 
 let watchlist: [&str; 30] = [
     "META", "DIS", "CMCSA", "VZ", "T", "CHTR", "NFLX", "TMUS", "TWTR", "FOXA", "FOX", "DISH",
