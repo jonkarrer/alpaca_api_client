@@ -1,6 +1,28 @@
 use super::request;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::*;
+
+/// The current status of the order in its lifecycle
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum OrderStatus {
+    Accepted,
+    AcceptedForBidding,
+    Calculated,
+    Canceled,
+    DoneForDay,
+    Expired,
+    Filled,
+    New,
+    PartiallyFilled,
+    PendingCancel,
+    PendingNew,
+    PendingReplace,
+    Rejected,
+    Replaced,
+    Stopped,
+    Suspended,
+}
 
 #[derive(Deserialize, Debug)]
 pub struct Order {
@@ -39,17 +61,17 @@ pub struct Order {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub enum TradeSide {
+pub enum OrderSide {
     Buy,
     Sell,
 }
 
-pub fn place_market_order(stock_symbol: &str, qty: f32, trade_side: TradeSide) -> Order {
+pub fn place_market_order(stock_symbol: &str, qty: f32, trade_side: OrderSide) -> Order {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
     let side = match trade_side {
-        TradeSide::Buy => "buy",
-        TradeSide::Sell => "sell",
+        OrderSide::Buy => "buy",
+        OrderSide::Sell => "sell",
     };
     let order = json!({
         "symbol": stock_symbol,

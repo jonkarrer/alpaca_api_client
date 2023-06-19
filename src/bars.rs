@@ -76,7 +76,7 @@ pub fn get_multi_bars(stock_symbols: &[&str], timeframe: &str, query: Option<&st
 
     #[derive(Deserialize)]
     struct Res {
-        bars: Option<HashMap<String, Vec<Bar>>>,
+        bars: Option<MultiBars>,
         next_page_token: Option<String>,
     }
 

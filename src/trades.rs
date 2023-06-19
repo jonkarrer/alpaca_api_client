@@ -52,7 +52,7 @@ pub fn get_latest_trade(stock_symbol: &str) -> Trade {
     r.trade.expect("No Trade In Response")
 }
 
-pub type MultiTrades = HashMap<String, Vec<Trade>>;
+pub type MultiTrades = HashMap<String, Trade>;
 
 pub fn get_multi_latest_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiTrades {
     let url = format!(
@@ -67,10 +67,9 @@ pub fn get_multi_latest_trades(stock_symbols: &[&str], query: Option<&str>) -> M
 
     #[derive(Deserialize)]
     struct Res {
-        trades: Option<HashMap<String, Vec<Trade>>>,
+        trades: Option<MultiTrades>,
     }
 
-    //TODO test on a weekday
     let r: Res = request("GET", &address)
         .call()
         .expect("Could Not Call API")
