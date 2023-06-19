@@ -3,7 +3,7 @@
 Do Not Use This Package In Any Serious Capcity. Untested and still unstable. A WORK IN PROGRESS.
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
-![Version 0.1.4](https://img.shields.io/badge/version-0.1.4-blue.svg)
+![Version 0.1.5](https://img.shields.io/badge/version-0.1.5-blue.svg)
 
 ## Table of Contents
 
