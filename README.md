@@ -3,7 +3,7 @@
 Do Not Use This Package In Any Serious Capcity. Not Liable for Any Issues.
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
-![Version 0.2.0](https://img.shields.io/badge/version-0.1.6-blue.svg)
+![Version 0.2.1](https://img.shields.io/badge/version-0.2.1-blue.svg)
 
 ## Table of Contents
 
@@ -49,7 +49,7 @@ APCA_API_SECRET_KEY=<secret_key>
 
 ## Usage
 
-[RS Docs](https://docs.rs/alpaca_api_client/0.2.0/alpaca_api_client/)
+[RS Docs](https://docs.rs/alpaca_api_client/0.2.1/alpaca_api_client/)
 
 Get bars for a single stock
 

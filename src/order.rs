@@ -1,6 +1,6 @@
 use super::request;
 use serde::{Deserialize, Serialize};
-use serde_json::*;
+use ureq::json;
 
 /// The current status of the order in its lifecycle
 #[derive(Debug, Deserialize, Serialize)]
@@ -24,7 +24,7 @@ pub enum OrderStatus {
     Suspended,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Order {
     pub id: String,
     pub client_order_id: Option<String>,
@@ -66,14 +66,18 @@ pub enum OrderSide {
     Sell,
 }
 
-pub fn place_market_order(stock_symbol: &str, qty: f32, trade_side: OrderSide) -> Order {
+pub fn place_market_order(
+    stock_symbol: &str,
+    qty: f32,
+    trade_side: OrderSide,
+) -> Result<Order, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
     let side = match trade_side {
         OrderSide::Buy => "buy",
         OrderSide::Sell => "sell",
     };
-    let order = json!({
+    let body = json!({
         "symbol": stock_symbol,
         "qty": qty.to_string(),
         "side": side,
@@ -81,18 +85,22 @@ pub fn place_market_order(stock_symbol: &str, qty: f32, trade_side: OrderSide) -
         "time_in_force": "gtc",
     });
 
-    let r = request("POST", url)
+    let response = request("POST", url)
         .set("Content-Type", "application/json")
-        .send_json(order)
-        .expect("Failed To Place Order");
-    let res: Option<Order> = r.into_json().expect("Failed To Convert Order To JSON");
-    res.expect("No Order In Response")
+        .send_json(body)?;
+
+    let order = response.into_json()?;
+    Ok(order)
 }
 
-pub fn place_trailing_stop_order(stock_symbol: &str, qty: f32, trail_percent: f32) -> Order {
+pub fn place_trailing_stop_order(
+    stock_symbol: &str,
+    qty: f32,
+    trail_percent: f32,
+) -> Result<Order, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
-    let order = json!({
+    let body = json!({
         "symbol": stock_symbol,
         "qty": qty.to_string(),
         "side": "sell",
@@ -101,13 +109,12 @@ pub fn place_trailing_stop_order(stock_symbol: &str, qty: f32, trail_percent: f3
         "trail_percent": trail_percent.to_string()
     });
 
-    let err_message = format!("Failed To Place Order {}", stock_symbol);
-    let r = request("POST", url)
+    let response = request("POST", url)
         .set("Content-Type", "application/json")
-        .send_json(order)
-        .expect(&err_message);
-    let res: Option<Order> = r.into_json().expect("Failed To Convert Order To JSON");
-    res.expect("No Order In Response")
+        .send_json(body)?;
+
+    let order = response.into_json()?;
+    Ok(order)
 }
 
 pub fn place_bracket_order(
@@ -116,14 +123,14 @@ pub fn place_bracket_order(
     side: &str,
     take_profit: f32,
     stop_loss: f32,
-) -> Order {
+) -> Result<Order, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
     let take_profit = (take_profit * 100.0).round() / 100.0;
     let stop_loss = (stop_loss * 100.0).round() / 100.0;
     let stop_limit = ((stop_loss - 1.0) * 100.0).round() / 100.0;
 
-    let bracket_order = json!({
+    let body = json!({
         "symbol": stock_symbol,
         "qty": qty.to_string(),
         "side": side,
@@ -139,20 +146,24 @@ pub fn place_bracket_order(
         }
     });
 
-    let r = request("POST", url)
+    let response = request("POST", url)
         .set("Content-Type", "application/json")
-        .send_json(bracket_order)
-        .expect("Failed To Place Order");
-    let res: Option<Order> = r.into_json().expect("Failed To Convert Order To JSON");
-    res.expect("No Order In Response")
+        .send_json(body)?;
+
+    let order = response.into_json()?;
+    Ok(order)
 }
 
-pub fn place_oto_take_profit_order(stock_symbol: &str, qty: f32, take_price: f32) -> Order {
+pub fn place_oto_take_profit_order(
+    stock_symbol: &str,
+    qty: f32,
+    take_price: f32,
+) -> Result<Order, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
     let take_profit = (take_price * 100.0).round() / 100.0;
 
-    let oto_order = json!({
+    let body = json!({
         "symbol": stock_symbol,
         "qty": qty.to_string(),
         "side": "buy",
@@ -164,24 +175,24 @@ pub fn place_oto_take_profit_order(stock_symbol: &str, qty: f32, take_price: f32
         },
     });
 
-    let err_message = format!("Failed To Place Take Profit Order {}", stock_symbol);
-    let r = request("POST", url)
+    let response = request("POST", url)
         .set("Content-Type", "application/json")
-        .send_json(oto_order)
-        .expect(&err_message);
-    let res: Option<Order> = r
-        .into_json()
-        .expect("Failed To Convert Take Profit Order To JSON");
+        .send_json(body)?;
 
-    res.expect("No Order Object In Response")
+    let order = response.into_json()?;
+    Ok(order)
 }
 
-pub fn place_oto_stop_loss_order(stock_symbol: &str, qty: f32, stop_price: f32) -> Order {
+pub fn place_oto_stop_loss_order(
+    stock_symbol: &str,
+    qty: f32,
+    stop_price: f32,
+) -> Result<Order, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
 
     let stop_loss = (stop_price * 100.0).round() / 100.0;
     let stop_limit = ((stop_price - 1.0) * 100.0).round() / 100.0;
-    let bracket_order = json!({
+    let body = json!({
         "symbol": stock_symbol,
         "qty": qty.to_string(),
         "side": "buy",
@@ -193,38 +204,32 @@ pub fn place_oto_stop_loss_order(stock_symbol: &str, qty: f32, stop_price: f32) 
             "limit_price": stop_limit.to_string()
         }
     });
-
-    let err_message = format!("Failed To Place Stop Loss Order {}", stock_symbol);
-    let r = request("POST", url)
+    let response = request("POST", url)
         .set("Content-Type", "application/json")
-        .send_json(bracket_order)
-        .expect(&err_message);
-    let res: Option<Order> = r
-        .into_json()
-        .expect("Failed To Convert Stop Loss Order To JSON");
+        .send_json(body)?;
 
-    res.expect("No Order Object In Response")
+    let order = response.into_json()?;
+    Ok(order)
 }
-pub fn get_orders(query: Option<&str>) -> Vec<Order> {
+
+pub fn get_orders(query: Option<&str>) -> Result<Vec<Order>, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
     let address = match query {
         Some(query) => format!("{url}?{query}"),
         _ => format!("{url}"),
     };
 
-    request("GET", &address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json")
+    let response = request("GET", &address).call()?;
+
+    let order = response.into_json()?;
+    Ok(order)
 }
 
-pub fn get_order_by_id(order_id: &str) -> Order {
+pub fn get_order_by_id(order_id: &str) -> Result<Order, ureq::Error> {
     let address = format!("https://paper-api.alpaca.markets/v2/orders/{order_id}");
 
-    request("GET", &address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json")
+    let response = request("GET", &address).call()?;
+
+    let order = response.into_json()?;
+    Ok(order)
 }
