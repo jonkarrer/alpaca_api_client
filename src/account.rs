@@ -1,7 +1,6 @@
 use super::request;
 use serde::Deserialize;
 
-/// The response object for account endpoint
 #[derive(Deserialize, Debug)]
 pub struct Account {
     pub account_blocked: bool,
@@ -38,13 +37,11 @@ pub struct Account {
 }
 
 /// Get your account details
-pub fn get_account() -> Account {
+pub fn get_account() -> Result<Account, ureq::Error> {
     let address = "https://paper-api.alpaca.markets/v2/account";
 
-    let r: Account = request("GET", address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json");
-    r
+    let response = request("GET", &address).call()?;
+    let account: Account = response.into_json()?;
+
+    Ok(account)
 }

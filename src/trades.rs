@@ -2,7 +2,6 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-/// A single trade object
 #[derive(Deserialize, Debug)]
 pub struct Trade {
     pub t: String,      // Timestamp
@@ -14,8 +13,8 @@ pub struct Trade {
     pub z: String,      // Tape
 }
 
-/// Get a trade for a single symbol
-pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Vec<Trade> {
+/// Get the trades for a specific stock with a query option
+pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Result<Vec<Trade>, ureq::Error> {
     let url = format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/trades");
     let address = match query {
         Some(query) => format!("{url}?{query}"),
@@ -23,10 +22,8 @@ pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Vec<Trade> {
     };
 
     #[derive(Deserialize)]
-    #[allow(dead_code)]
-    struct Res {
-        trades: Option<Vec<Trade>>,
-        symbol: String,
+    struct TradesResponse {
+        trades: Vec<Trade>,
         next_page_token: Option<String>,
     }
     let mut trades = Vec::new();
@@ -38,31 +35,28 @@ pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Vec<Trade> {
             Some(token) => format!("{}&page_token={}", &address, &token),
             _ => address.clone(),
         };
-        let r: Res = request("GET", &temp_address)
-            .call()
-            .expect("Could Not Call API")
-            .into_json()
-            .expect("Could Not Parse Response Into Json");
+        let response = request("GET", &temp_address).call()?;
+        let response: TradesResponse = response.into_json()?;
+        trades.extend(response.trades);
 
         // If a token is in response, assign to page_token for next loop
-        match r.next_page_token {
-            Some(next_page_token) => {
-                page_token = Some(next_page_token.clone());
-                // Collect results into Vec
-                trades.extend(r.trades.unwrap());
-            }
-            _ => {
-                trades.extend(r.trades.unwrap());
-                break;
-            }
+        match response.next_page_token {
+            Some(next_page_token) => page_token = Some(next_page_token.clone()),
+
+            _ => break,
         }
     }
-    trades
+
+    Ok(trades)
 }
 
 pub type MultiTrades = HashMap<String, Vec<Trade>>;
-/// Get trades for multiple symbols
-pub fn get_multi_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiTrades {
+
+/// Get multiple trades for multiple stocks
+pub fn get_multi_trades(
+    stock_symbols: &[&str],
+    query: Option<&str>,
+) -> Result<MultiTrades, ureq::Error> {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/trades?symbols={}",
         stock_symbols.join(",")
@@ -74,11 +68,11 @@ pub fn get_multi_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiTra
     };
 
     #[derive(Deserialize)]
-    struct Res {
-        trades: Option<MultiTrades>,
+    struct MultiTradesResponse {
+        trades: MultiTrades,
         next_page_token: Option<String>,
     }
-    let mut trades_map: MultiTrades = HashMap::new();
+    let mut multi_trades: MultiTrades = HashMap::new();
     let mut page_token = None;
 
     loop {
@@ -87,54 +81,53 @@ pub fn get_multi_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiTra
             Some(token) => format!("{}&page_token={}", &address, &token),
             _ => address.clone(),
         };
-        let r: Res = request("GET", &temp_address)
-            .call()
-            .expect("Could Not Call API")
-            .into_json()
-            .expect("Could Not Parse Response Into Json");
+        let response = request("GET", &temp_address).call()?;
+        let response: MultiTradesResponse = response.into_json()?;
+
+        for (symbol, bars) in response.trades {
+            multi_trades
+                .entry(symbol)
+                .or_insert(Vec::new())
+                .extend(bars);
+        }
 
         // If a token is in response, assign to page_token for next loop
-        match r.next_page_token {
-            Some(next_page_token) => {
-                page_token = Some(next_page_token.clone());
-                // Collect results into HashMap
-                for (symbol, bars) in r.trades.unwrap() {
-                    trades_map.entry(symbol).or_insert(Vec::new()).extend(bars);
-                }
-            }
-            _ => {
-                for (symbol, bars) in r.trades.unwrap() {
-                    trades_map.entry(symbol).or_insert(Vec::new()).extend(bars);
-                }
-                break;
-            }
+        match response.next_page_token {
+            Some(next_page_token) => page_token = Some(next_page_token.clone()),
+            _ => break,
         }
     }
-    trades_map
+
+    Ok(multi_trades)
 }
 
-/// Get latest trade for single symbol
-pub fn get_latest_trade(stock_symbol: &str) -> Trade {
-    let address = format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/trades/latest");
+/// Get latest trade for single stock
+pub fn get_latest_trade(stock_symbol: &str, query: Option<&str>) -> Result<Trade, ureq::Error> {
+    let url = format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/trades/latest");
+
+    let address = match query {
+        Some(query) => format!("{url}?{query}"),
+        _ => format!("{url}"),
+    };
 
     #[derive(Deserialize)]
-    #[allow(dead_code)]
-    struct Res {
-        trade: Option<Trade>,
-        symbol: String,
+    pub struct LatestTradeResponse {
+        pub trade: Trade,
+        pub symbol: String,
     }
-    let r: Res = request("GET", &address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json");
+    let response = request("GET", &address).call()?;
+    let latest_trade: LatestTradeResponse = response.into_json()?;
 
-    r.trade.expect("No Trade In Response")
+    Ok(latest_trade.trade)
 }
 
 pub type MultiLatestTrades = HashMap<String, Trade>;
-/// Get latest trades for multiple symobls
-pub fn get_multi_latest_trades(stock_symbols: &[&str], query: Option<&str>) -> MultiLatestTrades {
+
+/// Get latest trade for multiple stocks
+pub fn get_multi_latest_trades(
+    stock_symbols: &[&str],
+    query: Option<&str>,
+) -> Result<MultiLatestTrades, ureq::Error> {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/trades/latest?symbols={}",
         stock_symbols.join(",")
@@ -146,15 +139,11 @@ pub fn get_multi_latest_trades(stock_symbols: &[&str], query: Option<&str>) -> M
     };
 
     #[derive(Deserialize)]
-    struct Res {
-        trades: Option<MultiLatestTrades>,
+    pub struct MultiLatestTradesResponse {
+        pub trades: MultiLatestTrades,
     }
+    let response = request("GET", &address).call()?;
+    let response: MultiLatestTradesResponse = response.into_json()?;
 
-    let r: Res = request("GET", &address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json");
-
-    r.trades.expect("No Trades In Response")
+    Ok(response.trades)
 }

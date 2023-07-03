@@ -1,7 +1,6 @@
 use super::request;
 use serde::Deserialize;
 
-/// The response object for activities endpoint
 #[derive(Deserialize, Debug)]
 pub struct TradeActivity {
     pub activity_type: String,
@@ -17,14 +16,15 @@ pub struct TradeActivity {
     pub r#type: String,
 }
 
-/// Get trade activity for account
-pub fn get_trade_activity() -> Vec<TradeActivity> {
-    let address = "https://paper-api.alpaca.markets/v2/account/activities?activity_types=FILL";
+/// Get your recent activity by type
+pub fn get_trade_activity_by_type(activity_type: &str) -> Result<Vec<TradeActivity>, ureq::Error> {
+    let address = format!(
+        "https://paper-api.alpaca.markets/v2/account/activities?activity_type={}",
+        activity_type
+    );
 
-    let r: Vec<TradeActivity> = request("GET", address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json");
-    r
+    let response = request("GET", &address).call()?;
+    let activity: Vec<TradeActivity> = response.into_json()?;
+
+    Ok(activity)
 }

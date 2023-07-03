@@ -1,6 +1,6 @@
 [package]
 name = "alpaca_api_client"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 authors=["Jon Karrer <karrerjon@gmail.com>"]
 description = "Unofficial Alpaca API Client"

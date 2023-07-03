@@ -1,9 +1,10 @@
 # Alpaca API Client in Rust
 
-Do Not Use This Package In Any Serious Capcity. Not Liable for Any Issues.
+**Still a Work In Progress**
+Do Not Use This Package In Any Serious Capacity Yet. Not Liable for Any Issues.
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
-![Version 0.2.1](https://img.shields.io/badge/version-0.2.1-blue.svg)
+![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-blue.svg)
 
 ## Table of Contents
 
@@ -19,14 +20,15 @@ Do Not Use This Package In Any Serious Capcity. Not Liable for Any Issues.
 
 <a href="https://alpaca.markets/">Alpaca</a> is a trading platform for developers and app makers,
 and they provide various endpoints to access over http. The goal of this package is to provide
-the bare minimum tools for using the Alpaca API, and to learn more about open source software building.
-This is not a batteries included package yet, and still requires a lot of testing.
+the bare minimum tools for using the Alpaca API.
+
+Still exploring Rust and open source development, so this package may not be as professional or robust as other libraries out there. I am committed to creating and maintaining this library to the best of my ability, and do use this daily for stock trading.
 
 ## Features
 
-- **Feature 1:** Safe and single threaded
-- **Feature 2:** Easy to use
-- **Feature 3:** Minimal overhead
+- **Safe and single threaded**
+- **Easy to use**
+- **Minimal overhead**
 
 ## Installation
 
@@ -49,14 +51,14 @@ APCA_API_SECRET_KEY=<secret_key>
 
 ## Usage
 
-[RS Docs](https://docs.rs/alpaca_api_client/0.2.1/alpaca_api_client/)
+[RS Docs](https://docs.rs/alpaca_api_client/0.3.0/alpaca_api_client/)
 
 Get bars for a single stock
 
 ```rust
 use alpaca_api_client::get_bars;
 
-let bars = get_bars("BTU", "1Day", Some("start=2023-02-23"));
+let bars = get_bars("BTU", "1Day", Some("start=2023-02-23")).unwrap();
 ```
 
 Get bars for multiple symbols
@@ -70,7 +72,13 @@ let watchlist: [&str; 30] = [
   "LYV", "IQ", "HUYA", "DOYU", "VIAV",
 ];
 
-let multi_bars: MultiBars = get_multi_bars(&watchlist, "1Day", Some("start=2022-01-01"));
+let mut multi_bars = match get_multi_bars(&watchlist, "1Day", Some("start=2023-01-01")) {
+    Ok(multi_bars_map) => multi_bars_map,
+    Err(e) => {
+        println!("MultiBar Request Error:{}", e);
+        return None;
+    }
+};
 ```
 
 Place market order
@@ -78,7 +86,7 @@ Place market order
 ```rust
 use alpaca_api_client::{place_market_order, OrderSide};
 
-let order = place_market_order("SO", 3.0, OrderSide::Buy);
+let order = place_market_order("SO", 3.0, OrderSide::Buy).unwrap();
 ```
 
 ## Contribution

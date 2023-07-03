@@ -2,7 +2,6 @@ use super::request;
 use serde::{Deserialize, Serialize};
 use ureq::json;
 
-/// The current status of the order in its lifecycle
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum OrderStatus {
@@ -66,6 +65,7 @@ pub enum OrderSide {
     Sell,
 }
 
+/// Submit basic market order
 pub fn place_market_order(
     stock_symbol: &str,
     qty: f32,
@@ -88,11 +88,12 @@ pub fn place_market_order(
     let response = request("POST", url)
         .set("Content-Type", "application/json")
         .send_json(body)?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }
 
+/// Submit a trailing stop order, must have a filled market order for symbol
 pub fn place_trailing_stop_order(
     stock_symbol: &str,
     qty: f32,
@@ -112,15 +113,16 @@ pub fn place_trailing_stop_order(
     let response = request("POST", url)
         .set("Content-Type", "application/json")
         .send_json(body)?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }
 
+/// Submit a basic bracket order.
 pub fn place_bracket_order(
     stock_symbol: &str,
     qty: f32,
-    side: &str,
+    side: OrderSide,
     take_profit: f32,
     stop_loss: f32,
 ) -> Result<Order, ureq::Error> {
@@ -130,10 +132,15 @@ pub fn place_bracket_order(
     let stop_loss = (stop_loss * 100.0).round() / 100.0;
     let stop_limit = ((stop_loss - 1.0) * 100.0).round() / 100.0;
 
+    let order_side = match side {
+        OrderSide::Buy => "buy",
+        OrderSide::Sell => "sell",
+    };
+
     let body = json!({
         "symbol": stock_symbol,
         "qty": qty.to_string(),
-        "side": side,
+        "side": order_side,
         "type": "market",
         "time_in_force": "gtc",
         "order_class": "bracket",
@@ -149,11 +156,12 @@ pub fn place_bracket_order(
     let response = request("POST", url)
         .set("Content-Type", "application/json")
         .send_json(body)?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }
 
+/// Submit a One Replaces Other for a take profit order
 pub fn place_oto_take_profit_order(
     stock_symbol: &str,
     qty: f32,
@@ -178,11 +186,12 @@ pub fn place_oto_take_profit_order(
     let response = request("POST", url)
         .set("Content-Type", "application/json")
         .send_json(body)?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }
 
+/// Submit a One Replaces Other for a stop loss order
 pub fn place_oto_stop_loss_order(
     stock_symbol: &str,
     qty: f32,
@@ -207,11 +216,12 @@ pub fn place_oto_stop_loss_order(
     let response = request("POST", url)
         .set("Content-Type", "application/json")
         .send_json(body)?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }
 
+/// Get all orders
 pub fn get_orders(query: Option<&str>) -> Result<Vec<Order>, ureq::Error> {
     let url = "https://paper-api.alpaca.markets/v2/orders";
     let address = match query {
@@ -220,16 +230,17 @@ pub fn get_orders(query: Option<&str>) -> Result<Vec<Order>, ureq::Error> {
     };
 
     let response = request("GET", &address).call()?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }
 
+/// Get order by id
 pub fn get_order_by_id(order_id: &str) -> Result<Order, ureq::Error> {
     let address = format!("https://paper-api.alpaca.markets/v2/orders/{order_id}");
 
     let response = request("GET", &address).call()?;
-
     let order = response.into_json()?;
+
     Ok(order)
 }

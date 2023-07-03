@@ -2,7 +2,6 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-/// A single bar object
 #[derive(Deserialize, Debug)]
 pub struct Bar {
     pub t: String, // Timestamp
@@ -17,7 +16,6 @@ pub struct Bar {
 
 pub type Bars = Vec<Bar>;
 
-/// Getters for Bars
 pub trait BarSession {
     fn get_opens(&self) -> Vec<f32>;
     fn get_closes(&self) -> Vec<f32>;
@@ -60,8 +58,12 @@ impl BarSession for Vec<Bar> {
     }
 }
 
-/// Get bars for a single stock
-pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Bars {
+/// https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#bars
+pub fn get_bars(
+    stock_symbol: &str,
+    timeframe: &str,
+    query: Option<&str>,
+) -> Result<Bars, ureq::Error> {
     let url =
         format!("https://data.alpaca.markets/v2/stocks/{stock_symbol}/bars?timeframe={timeframe}");
     let address = match query {
@@ -70,10 +72,8 @@ pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Bar
     };
 
     #[derive(Deserialize)]
-    #[allow(dead_code)]
-    struct Res {
-        bars: Option<Bars>,
-        symbol: String,
+    struct BarsResponse {
+        bars: Bars,
         next_page_token: Option<String>,
     }
 
@@ -86,32 +86,29 @@ pub fn get_bars(stock_symbol: &str, timeframe: &str, query: Option<&str>) -> Bar
             Some(token) => format!("{}&page_token={}", &address, &token),
             _ => address.clone(),
         };
-        let r: Res = request("GET", &temp_address)
-            .call()
-            .expect("Could Not Call API")
-            .into_json()
-            .expect("Could Not Parse Response Into Json");
+        let response = request("GET", &temp_address).call()?;
+        let response: BarsResponse = response.into_json()?;
+
+        // Add bars to collection
+        bars.extend(response.bars);
 
         // If a token is in response, assign to page_token for next loop
-        match r.next_page_token {
-            Some(next_page_token) => {
-                page_token = Some(next_page_token.clone());
-                // Collect results into Vec
-                bars.extend(r.bars.unwrap());
-            }
-            _ => {
-                bars.extend(r.bars.unwrap());
-                break;
-            }
+        match response.next_page_token {
+            Some(next_page_token) => page_token = Some(next_page_token.clone()),
+            _ => break,
         }
     }
-    bars
+
+    Ok(bars)
 }
 
+/// https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#multi-bars
 pub type MultiBars = HashMap<String, Bars>;
-
-/// Get bars for multiple stocks
-pub fn get_multi_bars(stock_symbols: &[&str], timeframe: &str, query: Option<&str>) -> MultiBars {
+pub fn get_multi_bars(
+    stock_symbols: &[&str],
+    timeframe: &str,
+    query: Option<&str>,
+) -> Result<MultiBars, ureq::Error> {
     let url = format!(
         "https://data.alpaca.markets/v2/stocks/bars?timeframe={timeframe}&symbols={}",
         stock_symbols.join(",")
@@ -123,12 +120,12 @@ pub fn get_multi_bars(stock_symbols: &[&str], timeframe: &str, query: Option<&st
     };
 
     #[derive(Deserialize)]
-    struct Res {
-        bars: Option<MultiBars>,
+    struct MultiBarsResponse {
+        bars: MultiBars,
         next_page_token: Option<String>,
     }
 
-    let mut stock_bars_map: MultiBars = HashMap::new();
+    let mut multi_bars: MultiBars = HashMap::new();
     let mut page_token = None;
 
     loop {
@@ -137,34 +134,20 @@ pub fn get_multi_bars(stock_symbols: &[&str], timeframe: &str, query: Option<&st
             Some(token) => format!("{}&page_token={}", &address, &token),
             _ => address.clone(),
         };
-        let r: Res = request("GET", &temp_address)
-            .call()
-            .expect("Could Not Call API")
-            .into_json()
-            .expect("Could Not Parse Response Into Json");
+        let response = request("GET", &temp_address).call()?;
+        let response: MultiBarsResponse = response.into_json()?;
+
+        // Add multi_bars to collection
+        for (symbol, bars) in response.bars {
+            multi_bars.entry(symbol).or_insert(Vec::new()).extend(bars);
+        }
 
         // If a token is in response, assign to page_token for next loop
-        match r.next_page_token {
-            Some(next_page_token) => {
-                page_token = Some(next_page_token.clone());
-                // Collect results into HashMap
-                for (symbol, bars) in r.bars.unwrap() {
-                    stock_bars_map
-                        .entry(symbol)
-                        .or_insert(Vec::new())
-                        .extend(bars);
-                }
-            }
-            _ => {
-                for (symbol, bars) in r.bars.unwrap() {
-                    stock_bars_map
-                        .entry(symbol)
-                        .or_insert(Vec::new())
-                        .extend(bars);
-                }
-                break;
-            }
+        match response.next_page_token {
+            Some(next_page_token) => page_token = Some(next_page_token.clone()),
+            _ => break,
         }
     }
-    stock_bars_map
+
+    Ok(multi_bars)
 }

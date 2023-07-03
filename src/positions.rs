@@ -1,7 +1,6 @@
 use super::request;
 use serde::Deserialize;
 
-/// The response object for the position endpoint
 #[derive(Deserialize, Debug)]
 pub struct Position {
     pub asset_id: String,
@@ -23,26 +22,22 @@ pub struct Position {
     pub change_today: String,
 }
 
-/// Get a position for a stock symbol
-pub fn get_position(stock_symbol: &str) -> Position {
+/// Get a open single position by symbol
+pub fn get_position(stock_symbol: &str) -> Result<Position, ureq::Error> {
     let address = format!("https://paper-api.alpaca.markets/v2/positions/{stock_symbol}");
 
-    let r: Position = request("GET", &address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json");
-    r
+    let response = request("GET", &address).call()?;
+    let position = response.into_json()?;
+
+    Ok(position)
 }
 
 /// Get all open positions
-pub fn get_open_positions() -> Vec<Position> {
+pub fn get_open_positions() -> Result<Vec<Position>, ureq::Error> {
     let address = "https://paper-api.alpaca.markets/v2/positions";
 
-    let r: Vec<Position> = request("GET", address)
-        .call()
-        .expect("Could Not Call API")
-        .into_json()
-        .expect("Could Not Parse Response Into Json");
-    r
+    let response = request("GET", address).call()?;
+    let positions = response.into_json()?;
+
+    Ok(positions)
 }
