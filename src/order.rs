@@ -2,6 +2,7 @@ use super::request;
 use serde::{Deserialize, Serialize};
 use ureq::json;
 
+/// Possible order statuses
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum OrderStatus {
@@ -23,6 +24,7 @@ pub enum OrderStatus {
     Suspended,
 }
 
+/// API object for an Order
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Order {
     pub id: String,
@@ -59,6 +61,7 @@ pub struct Order {
     pub hwm: Option<String>,
 }
 
+/// Buy or Sell
 #[derive(Debug, Clone, Copy)]
 pub enum OrderSide {
     Buy,
@@ -161,7 +164,7 @@ pub fn place_bracket_order(
     Ok(order)
 }
 
-/// Submit a One Replaces Other for a take profit order
+/// Submit a One-Triggers-Other for a take profit order
 pub fn place_oto_take_profit_order(
     stock_symbol: &str,
     qty: f32,
@@ -191,7 +194,7 @@ pub fn place_oto_take_profit_order(
     Ok(order)
 }
 
-/// Submit a One Replaces Other for a stop loss order
+/// Submit a One-Triggers-Other for a stop loss order
 pub fn place_oto_stop_loss_order(
     stock_symbol: &str,
     qty: f32,

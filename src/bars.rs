@@ -2,6 +2,7 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// API object for a Bar
 #[derive(Deserialize, Debug)]
 pub struct Bar {
     pub t: String, // Timestamp
@@ -14,8 +15,13 @@ pub struct Bar {
     pub vw: f32,   // Volume weighted average
 }
 
+/// A custom type for a vector of bars
 pub type Bars = Vec<Bar>;
 
+/// A custom type for a hashmap of stock symbols and bars
+pub type MultiBars = HashMap<String, Bars>;
+
+/// Utility methods for interacting with Bars type
 pub trait BarSession {
     fn get_opens(&self) -> Vec<f32>;
     fn get_closes(&self) -> Vec<f32>;
@@ -58,7 +64,7 @@ impl BarSession for Vec<Bar> {
     }
 }
 
-/// https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#bars
+/// Get bars for a single stock
 pub fn get_bars(
     stock_symbol: &str,
     timeframe: &str,
@@ -102,8 +108,7 @@ pub fn get_bars(
     Ok(bars)
 }
 
-/// https://alpaca.markets/docs/api-references/market-data-api/stock-pricing-data/historical/#multi-bars
-pub type MultiBars = HashMap<String, Bars>;
+/// Get bars for multiple stocks at a time
 pub fn get_multi_bars(
     stock_symbols: &[&str],
     timeframe: &str,

@@ -1,6 +1,7 @@
 use super::request;
 use serde::Deserialize;
 
+/// API object for an Account
 #[derive(Deserialize, Debug)]
 pub struct Account {
     pub account_blocked: bool,

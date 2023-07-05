@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.3.1] - 2023-07-02
+
+### 📝 Chore
+
+- 📝 RS Docs cleanup
+
+---
+
 ## [0.3.0] - 2023-07-02
 
 ### ✨ Added

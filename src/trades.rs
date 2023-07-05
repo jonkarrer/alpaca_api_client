@@ -2,6 +2,7 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// API object for a Trade
 #[derive(Deserialize, Debug)]
 pub struct Trade {
     pub t: String,      // Timestamp
@@ -12,6 +13,12 @@ pub struct Trade {
     pub i: i64,         // Trade ID
     pub z: String,      // Tape
 }
+
+/// A custom type for a hashmap of stock symbols and latest trade objects
+pub type MultiLatestTrades = HashMap<String, Trade>;
+
+/// A custom type for a hashmap of stock symbols and trade objects
+pub type MultiTrades = HashMap<String, Vec<Trade>>;
 
 /// Get the trades for a specific stock with a query option
 pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Result<Vec<Trade>, ureq::Error> {
@@ -49,8 +56,6 @@ pub fn get_trades(stock_symbol: &str, query: Option<&str>) -> Result<Vec<Trade>,
 
     Ok(trades)
 }
-
-pub type MultiTrades = HashMap<String, Vec<Trade>>;
 
 /// Get multiple trades for multiple stocks
 pub fn get_multi_trades(
@@ -120,8 +125,6 @@ pub fn get_latest_trade(stock_symbol: &str, query: Option<&str>) -> Result<Trade
 
     Ok(latest_trade.trade)
 }
-
-pub type MultiLatestTrades = HashMap<String, Trade>;
 
 /// Get latest trade for multiple stocks
 pub fn get_multi_latest_trades(

@@ -1,6 +1,7 @@
 use super::request;
 use serde::Deserialize;
 
+/// API object for a TradeActivity
 #[derive(Deserialize, Debug)]
 pub struct TradeActivity {
     pub activity_type: String,
