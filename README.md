@@ -1,10 +1,10 @@
 # Alpaca API Client in Rust
 
 **Still a Work In Progress**
-Do Not Use This Package In Any Serious Capacity Yet. Not Liable for Any Issues.
+Not Production Ready. Not Liable for Any Issues. Recommended for Paper Accounts only.
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
-![Version 0.3.1](https://img.shields.io/badge/version-0.3.1-blue.svg)
+![Version 0.3.2](https://img.shields.io/badge/version-0.3.2-blue.svg)
 
 ## Table of Contents
 
@@ -12,7 +12,6 @@ Do Not Use This Package In Any Serious Capacity Yet. Not Liable for Any Issues.
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Testing](#testing)
 - [Contribution](#contribution)
 - [License](#license)
 
@@ -26,9 +25,12 @@ Still exploring Rust and open source development, so this package may not be as 
 
 ## Features
 
-- **Safe and single threaded**
-- **Easy to use**
-- **Minimal overhead**
+- **Get Stock Bars**
+- **Get Stock Trades**
+- **Get Positions**
+- **Place Orders**
+- **View Account**
+- **View Activity**
 
 ## Installation
 
@@ -43,7 +45,7 @@ cargo install alpaca_api_client
 Add your API keys to an <b>.env</b> file in the root of your directory with these names.
 
 ```bash
-// /.env
+/.env
 
 APCA_API_KEY_ID=<pub_key>
 APCA_API_SECRET_KEY=<secret_key>
@@ -51,42 +53,56 @@ APCA_API_SECRET_KEY=<secret_key>
 
 ## Usage
 
-[RS Docs](https://docs.rs/alpaca_api_client/0.3.1/alpaca_api_client/)
+[RS Docs](https://docs.rs/alpaca_api_client/0.3.2/alpaca_api_client/)
 
-Get bars for a single stock
+Get Bars for a single stock
 
 ```rust
 use alpaca_api_client::get_bars;
 
+// Args(symbol, timeframe, query)
 let bars = get_bars("BTU", "1Day", Some("start=2023-02-23")).unwrap();
 ```
 
-Get bars for multiple symbols
+Get Bars for multiple symbols
 
 ```rust
-use alpaca_api_client::get_multi_bars;
+use alpaca_api_client::{get_multi_bars, MultiBars};
 
-let watchlist: [&str; 30] = [
-  "META", "DIS", "CMCSA", "VZ", "T", "CHTR", "NFLX", "TMUS", "TWTR", "FOXA", "FOX", "DISH",
-  "CBS", "OMC", "TME", "TTWO", "EA", "ATVI", "ZM", "MTCH", "IAC", "NTES", "BIDU", "ROKU", "SPOT",
-  "LYV", "IQ", "HUYA", "DOYU", "VIAV",
-];
+fn get_bars_for_sector() -> Option<MultiBars> {
+    let watchlist: [&str; 30] = [
+        "META", "DIS", "CMCSA", "VZ", "T", "CHTR", "NFLX", "TMUS", "TWTR", "FOXA", "FOX", "DISH",
+        "CBS", "OMC", "TME", "TTWO", "EA", "ATVI", "ZM", "MTCH", "IAC", "NTES", "BIDU", "ROKU",
+        "SPOT", "LYV", "IQ", "HUYA", "DOYU", "VIAV",
+    ];
 
-let mut multi_bars = match get_multi_bars(&watchlist, "1Day", Some("start=2023-01-01")) {
-    Ok(multi_bars_map) => multi_bars_map,
-    Err(e) => {
-        println!("MultiBar Request Error:{}", e);
-        return None;
+    // Args(stock_symbols, timeframe, query)
+    match get_multi_bars(&watchlist, "1Day", Some("start=2023-01-01")) {
+        Ok(multi_bars_map) => Some(multi_bars_map),
+        Err(e) => {
+            println!("MultiBar Request Error:{}", e);
+            None
+        }
     }
-};
+}
 ```
 
-Place market order
+Place Market order
 
 ```rust
 use alpaca_api_client::{place_market_order, OrderSide};
 
+// Args(symbol, quantity, side)
 let order = place_market_order("SO", 3.0, OrderSide::Buy).unwrap();
+```
+
+Place Bracket order
+
+```rust
+use alpaca_api_client::{place_bracket_order, OrderSide};
+
+// Args(symbol, quantity, side, take_profit, stop_loss)
+let order = place_bracket_order("ABBV", 3.0, OrderSide::Buy, 170.00, 120.00).unwrap();
 ```
 
 ## Contribution

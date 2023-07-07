@@ -1,6 +1,16 @@
 # 🚀 Changelog
 
-All notable changes to this project will be documented in this file.
+## All notable changes to this project will be documented in this file.
+
+## [0.3.2] - 2023-07-02
+
+### 📝 Chore
+
+- 📝 Update examples in README
+
+### ⬆️
+
+- ⬆️ Update dependencies to latest minors
 
 ---
 
