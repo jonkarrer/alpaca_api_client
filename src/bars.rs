@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 /// Trend enum
 #[derive(Debug, PartialEq, Clone)]
-pub enum Trend {
+pub enum BarTrend {
     Bullish,
     Bearish,
 }
@@ -24,13 +24,13 @@ pub struct Bar {
 
 /// Get the trend of the bar i.e Bull/Bear
 impl Bar {
-    pub fn trend(&self) -> Trend {
+    pub fn trend(&self) -> BarTrend {
         let signal = self.c - self.o;
 
         if signal > 0.0 {
-            return Trend::Bullish;
+            return BarTrend::Bullish;
         } else {
-            return Trend::Bearish;
+            return BarTrend::Bearish;
         }
     }
 }
