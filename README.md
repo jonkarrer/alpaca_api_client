@@ -21,8 +21,6 @@ Not Production Ready. Not Liable for Any Issues. Recommended for Paper Accounts 
 and they provide various endpoints to access over http. The goal of this package is to provide
 the bare minimum tools for using the Alpaca API.
 
-Still exploring Rust and open source development, so this package may not be as professional or robust as other libraries out there. I am committed to creating and maintaining this library to the best of my ability, and do use this daily for stock trading.
-
 ## Features
 
 - **Get Stock Bars**
@@ -69,22 +67,9 @@ Get Bars for multiple symbols
 ```rust
 use alpaca_api_client::{get_multi_bars, MultiBars};
 
-fn get_bars_for_sector() -> Option<MultiBars> {
-    let watchlist: [&str; 30] = [
-        "META", "DIS", "CMCSA", "VZ", "T", "CHTR", "NFLX", "TMUS", "TWTR", "FOXA", "FOX", "DISH",
-        "CBS", "OMC", "TME", "TTWO", "EA", "ATVI", "ZM", "MTCH", "IAC", "NTES", "BIDU", "ROKU",
-        "SPOT", "LYV", "IQ", "HUYA", "DOYU", "VIAV",
-    ];
+let watchlist: [&str; 3] = ["META", "DIS", "VZ"];
 
-    // Args(stock_symbols, timeframe, query)
-    match get_multi_bars(&watchlist, "1Day", Some("start=2023-01-01")) {
-        Ok(multi_bars_map) => Some(multi_bars_map),
-        Err(e) => {
-            println!("MultiBar Request Error:{}", e);
-            None
-        }
-    }
-}
+let multiple_bars = get_multi_bars(&watchlist, "1Day", Some("start=2023-01-01")).unwrap();
 ```
 
 Place Market order

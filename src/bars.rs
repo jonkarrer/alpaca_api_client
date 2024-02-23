@@ -2,6 +2,13 @@ use super::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// Trend enum
+#[derive(Debug, PartialEq, Clone)]
+pub enum Trend {
+    Bullish,
+    Bearish,
+}
+
 /// API object for a Bar
 #[derive(Deserialize, Debug)]
 pub struct Bar {
@@ -13,6 +20,19 @@ pub struct Bar {
     pub v: i32,    // Volume
     pub n: i32,    // Number of trades
     pub vw: f32,   // Volume weighted average
+}
+
+/// Get the trend of the bar i.e Bull/Bear
+impl Bar {
+    pub fn trend(&self) -> Trend {
+        let signal = self.c - self.o;
+
+        if signal > 0.0 {
+            return Trend::Bullish;
+        } else {
+            return Trend::Bearish;
+        }
+    }
 }
 
 /// A custom type for a vector of bars
