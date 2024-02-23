@@ -1,3 +1,45 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [0.4.0] - 2024-02-23
+
+### Features
+
+- Get_multi_latest_trades functionality
+- Get_multi_trades functionality
+- BarSession trait for bars module
+- OTO ordering
+- All methods return a Result type, add a changelog, clean up
+
+### Miscellaneous Tasks
+
+- Readme
+- Specify pkg version for ureq
+- Specify pkg version for serde_json
+- Change pkg version for serde_json
+- Change catagories
+- Update readme
+- Update readme
+- Update README
+- Pkg version update
+- Comments and documentation
+- Comments and documentation
+- Comments and documentation
+- Comments and documentation
+- Comments and documentation
+- Update versions
+- Update RS docs
+- Update examples in README and update dependacies to latest minors
+
+### Refactor
+
+- Proper error handling for the order module
+
+### Add
+
+- Trend to Bar struct
+
 # 🚀 Changelog
 
 ## All notable changes to this project will be documented in this file.
