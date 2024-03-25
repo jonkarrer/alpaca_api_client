@@ -4,7 +4,7 @@
 Not Production Ready. Not Liable for Any Issues. Recommended for Paper Accounts only.
 
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
-![Version 0.3.2](https://img.shields.io/badge/version-0.3.2-blue.svg)
+![Version 0.5.0](https://img.shields.io/badge/version-0.3.2-blue.svg)
 
 ## Table of Contents
 
@@ -92,7 +92,7 @@ let order = place_bracket_order("ABBV", 3.0, OrderSide::Buy, 170.00, 120.00).unw
 
 ## Contribution
 
-Any and all PR's are welcome. This is my first Rust project and my first foray into open source. I see a need for this type of Rust client to support Alpaca's v2 API.
+Any and all PR's are welcome. I see a need for this type of Rust client to support Alpaca's v2 API.
 
 ## License
 
