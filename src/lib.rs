@@ -60,7 +60,7 @@
 //! ```
 //!
 
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use ureq::Request;
 
 mod account;
