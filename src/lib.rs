@@ -64,22 +64,25 @@ use dotenvy::dotenv;
 use ureq::Request;
 
 mod account;
-pub use self::account::*;
+pub use account::*;
 
 mod activity;
-pub use self::activity::*;
+pub use activity::*;
 
 mod bars;
-pub use self::bars::*;
+pub use bars::*;
 
 mod order;
-pub use self::order::*;
+pub use order::*;
 
 mod positions;
-pub use self::positions::*;
+pub use positions::*;
 
 mod trades;
-pub use self::trades::*;
+pub use trades::*;
+
+mod timeframe;
+pub use timeframe::*;
 
 fn request(method: &str, address: &str) -> Request {
     dotenv().ok();
