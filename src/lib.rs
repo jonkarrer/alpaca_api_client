@@ -69,8 +69,8 @@ pub use account::*;
 mod activity;
 pub use activity::*;
 
-mod bars;
-pub use bars::*;
+mod market_data;
+pub use market_data::*;
 
 mod order;
 pub use order::*;
