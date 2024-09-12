@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use crate::request;
 
 #[derive(Deserialize, Debug)]
-struct StockQuote {
+pub struct StockQuote {
     t: String,      // Timestamp
     ax: String,     // Exchange
     ap: f32,        // Ask Price
@@ -20,17 +20,17 @@ type HistoricalQuotes = HashMap<String, Vec<StockQuote>>;
 type LatestQuotes = HashMap<String, StockQuote>;
 
 #[derive(Deserialize, Debug)]
-struct HistoricalQuotesResponse {
+pub struct HistoricalQuotesResponse {
     quotes: HistoricalQuotes,
     next_page_token: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
-struct LatestQuotesResponse {
+pub struct LatestQuotesResponse {
     quotes: HashMap<String, StockQuote>,
 }
 
-struct HistoricalQuotesQuery<'a> {
+pub struct HistoricalQuotesQuery<'a> {
     url: &'a str,
     symbols: Vec<&'a str>,
     start: Option<&'a str>,
@@ -43,7 +43,7 @@ struct HistoricalQuotesQuery<'a> {
     sort_desc: bool,
 }
 
-struct LatestQuotesQuery<'a> {
+pub struct LatestQuotesQuery<'a> {
     url: &'a str,
     symbols: Vec<&'a str>,
     feed: Option<&'a str>,
