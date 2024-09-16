@@ -2,6 +2,7 @@ use dotenvy::dotenv;
 use ureq::Request;
 
 pub mod market_data;
+pub mod trading;
 
 mod timeframe;
 pub use timeframe::TimeFrame;
