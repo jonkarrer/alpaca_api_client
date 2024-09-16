@@ -1,18 +1,16 @@
-use serde::Deserialize;
-
-use crate::request;
-
 use super::{bars::StockBar, quotes::StockQuote, trades::StockTrade};
+use crate::request;
+use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct StockSnapshot {
-    latest_trade: Option<StockTrade>,
-    latest_quote: Option<StockQuote>,
-    minute_bar: Option<StockBar>,
-    day_bar: Option<StockBar>,
-    prev_daily_bar: Option<StockBar>,
+    pub latest_trade: Option<StockTrade>,
+    pub latest_quote: Option<StockQuote>,
+    pub minute_bar: Option<StockBar>,
+    pub day_bar: Option<StockBar>,
+    pub prev_daily_bar: Option<StockBar>,
 }
 
 pub type Snapshots = HashMap<String, StockSnapshot>;
@@ -59,16 +57,8 @@ impl<'a> SnapshotsQuery<'a> {
     pub fn send(self) -> Result<Snapshots, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-
         let response: Snapshots = response.into_json()?;
-
-        let mut snapshots: Snapshots = HashMap::new();
-
-        for (symbol, snapshot) in response {
-            snapshots.insert(symbol, snapshot);
-        }
-
-        Ok(snapshots)
+        Ok(response)
     }
 }
 

@@ -1,19 +1,18 @@
+use crate::request;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-use crate::request;
-
 #[derive(Deserialize, Debug)]
 pub struct StockQuote {
-    t: String,      // Timestamp
-    ax: String,     // Exchange
-    ap: f32,        // Ask Price
-    r#as: i32,      // Ask Size
-    bx: String,     // Exchange
-    bp: f32,        // Bid Price
-    bs: i32,        // Bid Size
-    c: Vec<String>, // Condition
-    z: String,      // Condition
+    pub t: String,      // Timestamp
+    pub ax: String,     // Exchange
+    pub ap: f32,        // Ask Price
+    pub r#as: i32,      // Ask Size
+    pub bx: String,     // Exchange
+    pub bp: f32,        // Bid Price
+    pub bs: i32,        // Bid Size
+    pub c: Vec<String>, // Condition
+    pub z: String,      // Condition
 }
 
 type HistoricalQuotes = HashMap<String, Vec<StockQuote>>;
@@ -27,7 +26,7 @@ pub struct HistoricalQuotesResponse {
 
 #[derive(Deserialize, Debug)]
 pub struct LatestQuotesResponse {
-    quotes: HashMap<String, StockQuote>,
+    quotes: LatestQuotes,
 }
 
 pub struct HistoricalQuotesQuery<'a> {
@@ -180,8 +179,6 @@ impl<'a> HistoricalQuotesQuery<'a> {
                 _ => break,
             }
         }
-
-        dbg!(i);
 
         Ok(quotes)
     }

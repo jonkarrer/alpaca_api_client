@@ -1,8 +1,5 @@
-use std::string;
-
-use serde::Deserialize;
-
 use crate::request;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct NewsArticle {
@@ -85,13 +82,13 @@ impl<'a> NewsQuery<'a> {
         self
     }
 
-    pub fn sort_desc(mut self, sort_desc: bool) -> Self {
+    pub fn sort_desc(mut self) -> Self {
         self.sort_desc = true;
         self.sort_asc = false;
         self
     }
 
-    pub fn sort_asc(mut self, sort_asc: bool) -> Self {
+    pub fn sort_asc(mut self) -> Self {
         self.sort_asc = true;
         self.sort_desc = false;
         self
@@ -171,7 +168,7 @@ mod tests {
             .include_content(true)
             .exclude_contentless(true)
             .limit(10)
-            .sort_desc(true)
+            .sort_desc()
             .send()
             .unwrap();
 

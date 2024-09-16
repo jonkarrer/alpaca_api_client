@@ -1,11 +1,9 @@
+use crate::request;
+use serde::Deserialize;
 use std::collections::HashMap;
 
-use serde::Deserialize;
-
-use crate::request;
-
 #[derive(Deserialize, Debug)]
-struct StockAuction {
+pub struct StockAuction {
     pub d: String,
     pub o: Option<Vec<StockPrice>>, // Open
     pub c: Option<Vec<StockPrice>>, // Close
@@ -13,7 +11,7 @@ struct StockAuction {
 }
 
 #[derive(Deserialize, Debug)]
-struct StockPrice {
+pub struct StockPrice {
     pub c: String, // Condition
     pub p: f32,    // Price
     pub t: String, // Time
@@ -21,13 +19,13 @@ struct StockPrice {
     pub x: String, // Exchange
 }
 
+type HistoricalAuctions = HashMap<String, Vec<StockAuction>>;
+
 #[derive(Deserialize, Debug)]
-struct HistoricalAuctionResponse {
+pub struct HistoricalAuctionResponse {
     pub auctions: HistoricalAuctions,
     pub next_page_token: Option<String>,
 }
-
-pub type HistoricalAuctions = HashMap<String, Vec<StockAuction>>;
 
 pub struct HistoricalAuctionsQuery<'a> {
     url: &'a str,

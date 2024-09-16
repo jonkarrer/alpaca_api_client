@@ -3,61 +3,52 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Deserialize, Debug)]
-pub struct StockTrade {
-    pub t: String,      // Timestamp
-    pub x: String,      // Exchange
-    pub p: f64,         // Price
-    pub s: i32,         // Size
-    pub c: Vec<String>, // Condition
-    pub i: i32,         // Id
-    pub z: String,      // Condition
+pub struct OptionTrade {
+    pub t: String, // Timestamp
+    pub x: String, // Exchange
+    pub p: f64,    // Price
+    pub s: i32,    // Size
+    pub c: String, // Condition
 }
 
-pub type HistoricalTrades = HashMap<String, Vec<StockTrade>>;
-pub type LatestTrades = HashMap<String, StockTrade>;
+pub type HistoricalOptionTrades = HashMap<String, Vec<OptionTrade>>;
+pub type LatestOptionTrades = HashMap<String, OptionTrade>;
 
 #[derive(Deserialize, Debug)]
-pub struct HistoricalTradesResponse {
-    trades: HistoricalTrades,
+pub struct HistoricalOptionTradesResponse {
+    trades: HistoricalOptionTrades,
     next_page_token: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
-pub struct LatestTradesResponse {
-    trades: LatestTrades,
+pub struct LatestOptionTradesResponse {
+    trades: LatestOptionTrades,
 }
 
-pub struct HistoricalTradesQuery<'a> {
+pub struct HistoricalOptionTradesQuery<'a> {
     url: &'a str,
     symbols: Vec<&'a str>,
     start: Option<&'a str>,
     end: Option<&'a str>,
-    feed: Option<&'a str>,
-    currency: Option<&'a str>,
     limit: Option<i32>,
-    asof: Option<&'a str>,
     sort_asc: bool,
     sort_desc: bool,
 }
 
-pub struct LatestTradesQuery<'a> {
+pub struct LatestOptionTradesQuery<'a> {
     url: &'a str,
     symbols: Vec<&'a str>,
     feed: Option<&'a str>,
-    currency: Option<&'a str>,
 }
 
-impl<'a> HistoricalTradesQuery<'a> {
+impl<'a> HistoricalOptionTradesQuery<'a> {
     pub fn new(symbols: Vec<&'a str>) -> Self {
         Self {
-            url: "https://data.alpaca.markets/v2/stocks/trades",
+            url: "https://data.alpaca.markets/v1beta1/options/trades",
             symbols,
             start: None,
             end: None,
-            feed: None,
-            currency: None,
             limit: None,
-            asof: None,
             sort_asc: false,
             sort_desc: false,
         }
@@ -73,23 +64,8 @@ impl<'a> HistoricalTradesQuery<'a> {
         self
     }
 
-    pub fn feed(mut self, feed: &'a str) -> Self {
-        self.feed = Some(feed);
-        self
-    }
-
-    pub fn currency(mut self, currency: &'a str) -> Self {
-        self.currency = Some(currency);
-        self
-    }
-
     pub fn limit(mut self, limit: i32) -> Self {
         self.limit = Some(limit);
-        self
-    }
-
-    pub fn asof(mut self, asof: &'a str) -> Self {
-        self.asof = Some(asof);
         self
     }
 
@@ -116,20 +92,8 @@ impl<'a> HistoricalTradesQuery<'a> {
             query.push_str(&format!("&end={}", end));
         }
 
-        if let Some(feed) = self.feed {
-            query.push_str(&format!("&feed={}", feed));
-        }
-
-        if let Some(currency) = self.currency {
-            query.push_str(&format!("&currency={}", currency));
-        }
-
         if let Some(limit) = self.limit {
             query.push_str(&format!("&limit={}", limit));
-        }
-
-        if let Some(asof) = self.asof {
-            query.push_str(&format!("&asof={}", asof));
         }
 
         if self.sort_asc {
@@ -141,9 +105,9 @@ impl<'a> HistoricalTradesQuery<'a> {
         format!("{}?{}", self.url, query)
     }
 
-    pub fn send(&self) -> Result<HistoricalTrades, ureq::Error> {
+    pub fn send(&self) -> Result<HistoricalOptionTrades, ureq::Error> {
         let route = self.build();
-        let mut trades: HistoricalTrades = HashMap::new();
+        let mut trades: HistoricalOptionTrades = HashMap::new();
         let mut page_token = None;
 
         let mut i = 0;
@@ -163,7 +127,7 @@ impl<'a> HistoricalTradesQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalTradesResponse = response.into_json()?;
+            let response: HistoricalOptionTradesResponse = response.into_json()?;
 
             // Add trades to collection
             for (symbol, trade) in response.trades {
@@ -182,13 +146,12 @@ impl<'a> HistoricalTradesQuery<'a> {
     }
 }
 
-impl<'a> LatestTradesQuery<'a> {
+impl<'a> LatestOptionTradesQuery<'a> {
     pub fn new(symbols: Vec<&'a str>) -> Self {
         Self {
-            url: "https://data.alpaca.markets/v2/stocks/trades/latest",
+            url: "https://data.alpaca.markets/v1beta1/options/trades/latest",
             symbols,
             feed: None,
-            currency: None,
         }
     }
 
@@ -197,26 +160,20 @@ impl<'a> LatestTradesQuery<'a> {
         self
     }
 
-    pub fn currency(mut self, currency: &'a str) -> Self {
-        self.currency = Some(currency);
-        self
-    }
-
     fn build(self) -> String {
         let mut query = format!("symbols={}", self.symbols.join(","));
+
         if let Some(feed) = self.feed {
             query.push_str(&format!("&feed={}", feed));
         }
-        if let Some(currency) = self.currency {
-            query.push_str(&format!("&currency={}", currency));
-        }
+
         format!("{}?{}", self.url, query)
     }
 
-    pub fn send(self) -> Result<LatestTrades, ureq::Error> {
+    pub fn send(self) -> Result<LatestOptionTrades, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: LatestTradesResponse = response.into_json()?;
+        let response: LatestOptionTradesResponse = response.into_json()?;
         Ok(response.trades)
     }
 }
@@ -226,18 +183,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_historical_trade_query() {
-        let res = HistoricalTradesQuery::new(vec!["AAPL"])
-            .feed("sip")
+    fn test_historical_option_trade_query() {
+        let res = HistoricalOptionTradesQuery::new(vec!["AAPL241220C00300000"])
             .limit(10)
             .send()
             .unwrap();
-        assert!(res.contains_key("AAPL"));
+        dbg!(&res);
+        assert!(res.contains_key("AAPL241220C00300000"));
     }
 
     #[test]
-    fn test_latest_trade_query() {
-        let res = LatestTradesQuery::new(vec!["AAPL"]).send().unwrap();
-        assert!(res.contains_key("AAPL"));
+    fn test_latest_option_trade_query() {
+        let res = LatestOptionTradesQuery::new(vec!["AAPL241220C00300000"])
+            .feed("indicative")
+            .send()
+            .unwrap();
+        dbg!(&res);
+        assert!(res.contains_key("AAPL241220C00300000"));
     }
 }

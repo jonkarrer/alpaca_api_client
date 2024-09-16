@@ -63,26 +63,13 @@
 use dotenvy::dotenv;
 use ureq::Request;
 
-mod account;
-pub use account::*;
-
-mod activity;
-pub use activity::*;
-
-mod market_data;
-pub use market_data::*;
-
-mod order;
-pub use order::*;
-
-mod positions;
-pub use positions::*;
-
-mod trades;
-pub use trades::*;
+pub mod market_data;
 
 mod timeframe;
-pub use timeframe::*;
+pub use timeframe::TimeFrame;
+
+mod trend;
+pub use trend::Trend;
 
 fn request(method: &str, address: &str) -> Request {
     dotenv().ok();
