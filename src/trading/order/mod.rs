@@ -1,4 +1,5 @@
 pub mod create;
+pub mod delete;
 pub mod get;
 
 use serde::{Deserialize, Serialize};

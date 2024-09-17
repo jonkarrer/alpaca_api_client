@@ -122,14 +122,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_get_orders_query() {
+    fn test_get_all_orders_query() {
         let res = GetOrdersQuery::new(AccountType::Paper)
             .status("closed")
             .send()
             .unwrap();
 
         dbg!(&res);
-        assert!(res.len() > 0);
+        // assert!(res.len() > 0);
+        assert!(false);
     }
 
     #[test]
