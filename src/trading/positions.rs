@@ -12,7 +12,6 @@ pub struct ClosedPosition {
     pub body: Order,
 }
 
-/// API object for a Position
 #[derive(Deserialize, Debug)]
 pub struct Position {
     pub asset_id: String,

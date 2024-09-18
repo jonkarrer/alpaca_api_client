@@ -1,45 +1,44 @@
+use super::Order;
 use crate::{request, trading::AccountType};
 use serde::{Deserialize, Serialize};
 
-use super::Order;
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateOrderQuery<'a> {
-    pub symbol: &'a str,
-    pub side: String,
-    pub r#type: String,
-    pub time_in_force: String,
-    pub extend_hours: bool,
+    symbol: &'a str,
+    side: String,
+    r#type: String,
+    time_in_force: String,
+    extend_hours: bool,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub qty: Option<&'a str>,
+    qty: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub notional: Option<&'a str>,
+    notional: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub limit_price: Option<&'a str>,
+    limit_price: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub stop_price: Option<&'a str>,
+    stop_price: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub trail_price: Option<&'a str>,
+    trail_price: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub trail_percent: Option<&'a str>,
+    trail_percent: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub client_order_id: Option<&'a str>,
+    client_order_id: Option<&'a str>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub order_class: Option<String>,
+    order_class: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub take_profit: Option<TakeProfit<'a>>,
+    take_profit: Option<TakeProfit<'a>>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub stop_loss: Option<StopLoss<'a>>,
+    stop_loss: Option<StopLoss<'a>>,
 }
 
 impl<'a> CreateOrderQuery<'a> {
