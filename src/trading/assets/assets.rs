@@ -27,23 +27,19 @@ pub struct AssetsQuery<'a> {
     pub asset_class: Option<&'a str>,
     pub exchange: Option<&'a str>,
     pub attributes: Option<Vec<&'a str>>,
-    pub account: AccountType,
 }
 
 impl<'a> AssetsQuery<'a> {
     pub fn new(account_type: AccountType) -> Self {
-        let url = match account_type {
-            AccountType::Live => "https://api.alpaca.markets/v2/assets",
-            AccountType::Paper => "https://paper-api.alpaca.markets/v2/assets",
-        };
-
         Self {
-            url,
+            url: match account_type {
+                AccountType::Live => "https://api.alpaca.markets/v2/assets",
+                AccountType::Paper => "https://paper-api.alpaca.markets/v2/assets",
+            },
             status: None,
             asset_class: None,
             exchange: None,
             attributes: None,
-            account: account_type,
         }
     }
 

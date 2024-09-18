@@ -64,13 +64,11 @@ pub struct OptionContractsQuery<'a> {
 
 impl<'a> OptionContractsQuery<'a> {
     pub fn new(account_type: AccountType) -> Self {
-        let url = match account_type {
-            AccountType::Live => "https://api.alpaca.markets/v2/options/contracts",
-            AccountType::Paper => "https://paper-api.alpaca.markets/v2/options/contracts",
-        };
-
         Self {
-            url,
+            url: match account_type {
+                AccountType::Live => "https://api.alpaca.markets/v2/options/contracts",
+                AccountType::Paper => "https://paper-api.alpaca.markets/v2/options/contracts",
+            },
             underlying_symbols: None,
             show_deliverables: false,
             status: None,

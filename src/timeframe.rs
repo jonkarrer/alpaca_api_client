@@ -21,11 +21,11 @@ impl ToString for TimeFrame {
             TimeFrame::FiveMinutes => "5Min".to_string(),
             TimeFrame::FifteenMinutes => "15Min".to_string(),
             TimeFrame::ThirtyMinutes => "30Min".to_string(),
-            TimeFrame::OneHour => "1Hour".to_string(),
-            TimeFrame::FourHours => "4Hour".to_string(),
-            TimeFrame::OneDay => "1Day".to_string(),
-            TimeFrame::OneWeek => "1Week".to_string(),
-            TimeFrame::OneMonth => "1Month".to_string(),
+            TimeFrame::OneHour => "1H".to_string(),
+            TimeFrame::FourHours => "4H".to_string(),
+            TimeFrame::OneDay => "1D".to_string(),
+            TimeFrame::OneWeek => "1W".to_string(),
+            TimeFrame::OneMonth => "1M".to_string(),
         }
     }
 }
@@ -44,6 +44,15 @@ impl FromStr for TimeFrame {
             "1Day" => Ok(TimeFrame::OneDay),
             "1Week" => Ok(TimeFrame::OneWeek),
             "1Month" => Ok(TimeFrame::OneMonth),
+            "1T" => Ok(TimeFrame::OneMinute),
+            "5T" => Ok(TimeFrame::FiveMinutes),
+            "15T" => Ok(TimeFrame::FifteenMinutes),
+            "30T" => Ok(TimeFrame::ThirtyMinutes),
+            "1H" => Ok(TimeFrame::OneHour),
+            "4H" => Ok(TimeFrame::FourHours),
+            "1D" => Ok(TimeFrame::OneDay),
+            "1W" => Ok(TimeFrame::OneWeek),
+            "1M" => Ok(TimeFrame::OneMonth),
             _ => Err(Error::other("Timeframes Do Not Match")),
         }
     }

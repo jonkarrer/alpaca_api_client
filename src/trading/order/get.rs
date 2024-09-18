@@ -15,12 +15,11 @@ pub struct GetOrdersQuery<'a> {
 
 impl<'a> GetOrdersQuery<'a> {
     pub fn new(account_type: AccountType) -> Self {
-        let url = match account_type {
-            AccountType::Live => "https://api.alpaca.markets/v2/orders",
-            AccountType::Paper => "https://paper-api.alpaca.markets/v2/orders",
-        };
         Self {
-            url,
+            url: match account_type {
+                AccountType::Live => "https://api.alpaca.markets/v2/orders",
+                AccountType::Paper => "https://paper-api.alpaca.markets/v2/orders",
+            },
             status: None,
             limit: None,
             after: None,

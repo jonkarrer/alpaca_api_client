@@ -75,7 +75,7 @@ impl<'a> PositionsQuery<'a> {
         self,
         cancel_orders: bool,
     ) -> Result<AllClosedPositions, ureq::Error> {
-        let mut query = format!("?cancel_orders={}", cancel_orders);
+        let query = format!("?cancel_orders={}", cancel_orders);
         let route = format!("{}{}", self.url, query);
         let response: ureq::Response = request("DELETE", &route).call()?;
 
