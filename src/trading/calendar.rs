@@ -4,10 +4,10 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct CalendarDay {
-    date: String,
-    open: String,
-    close: String,
-    settlement_date: String,
+    pub date: String,
+    pub open: String,
+    pub close: String,
+    pub settlement_date: String,
 }
 
 pub type Calendar = Vec<CalendarDay>;
