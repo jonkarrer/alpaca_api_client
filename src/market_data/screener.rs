@@ -1,6 +1,5 @@
-use serde::Deserialize;
-
 use crate::request;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct ActiveStock {
