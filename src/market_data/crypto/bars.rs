@@ -1,7 +1,5 @@
 use crate::{
-    market_data::stocks::bars::{
-        HistoricalBars, HistoricalBarsResponse, LatestBars, LatestBarsResponse,
-    },
+    market_data::stocks::{HistoricalBars, HistoricalBarsResponse, LatestBars, LatestBarsResponse},
     request, TimeFrame,
 };
 use std::collections::HashMap;

@@ -47,14 +47,14 @@ impl<'a> PositionsQuery<'a> {
         }
     }
 
-    pub fn get_all_open_positions(self) -> Result<AllPositions, ureq::Error> {
+    pub fn get_all_open_positions(&self) -> Result<AllPositions, ureq::Error> {
         let response = request("GET", self.url).call()?;
         let positions = response.into_json()?;
 
         Ok(positions)
     }
 
-    pub fn get_position_by_symbol(self, symbol: &'a str) -> Result<Position, ureq::Error> {
+    pub fn get_position_by_symbol(&self, symbol: &'a str) -> Result<Position, ureq::Error> {
         let route = format!("{}/{}", self.url, symbol);
         let response = request("GET", &route).call()?;
         let position = response.into_json()?;
@@ -62,7 +62,7 @@ impl<'a> PositionsQuery<'a> {
         Ok(position)
     }
 
-    pub fn get_position_by_id(self, id: &'a str) -> Result<Position, ureq::Error> {
+    pub fn get_position_by_id(&self, id: &'a str) -> Result<Position, ureq::Error> {
         let route = format!("{}/{}", self.url, id);
         let response = request("GET", &route).call()?;
         let position = response.into_json()?;
@@ -71,7 +71,7 @@ impl<'a> PositionsQuery<'a> {
     }
 
     pub fn close_all_positions(
-        self,
+        &self,
         cancel_orders: bool,
     ) -> Result<AllClosedPositions, ureq::Error> {
         let query = format!("?cancel_orders={}", cancel_orders);
@@ -86,7 +86,7 @@ impl<'a> PositionsQuery<'a> {
     }
 
     pub fn close_position_by_id_or_symbol(
-        self,
+        &self,
         id_or_symbol: &'a str,
         qty: Option<f32>,
         percentage: Option<f32>,

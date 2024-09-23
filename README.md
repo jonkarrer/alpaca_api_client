@@ -23,12 +23,7 @@ APCA_API_KEY_ID=<pub_key>
 APCA_API_SECRET_KEY=<secret_key>
 ```
 
-Or provide them in the environment variables.
-
-```bash
-APCA_API_KEY_ID=<pub_key>
-APCA_API_SECRET_KEY=<secret_key>
-```
+Or find some other way to feed them into the environment.
 
 ## Features
 
@@ -59,16 +54,16 @@ Link to the documentation -> [Alpaca API Docs](https://docs.alpaca.markets/docs/
 
 ## Usage
 
-[RS Docs](https://docs.rs/alpaca_api_client/0.6.0/alpaca_api_client/) | [Examples](https://github.com/jonkarrer/alpaca_api_client/blob/main/src/account.rs)
+[RS Docs](https://docs.rs/alpaca_api_client/0.6.0/alpaca_api_client/) | [Examples](https://github.com/jonkarrer/alpaca_api_client/tree/main/examples)
 
 The Alpaca api is mostly designed to be manipulated through query parameters. There are some cases where they want a body in the request with our desired queries. In either case, this library operates by allowing users to manage their queries with a builder pattern. Essentially, the query params map to setters on the query builder. Here are a few examples.
 
 ### Historical Bars
 
 ```rust
-use alpaca_api_client::{market_data::stocks::bars::HistoricalBarsQuery, TimeFrame};
+use alpaca_api_client::{market_data::stocks::HistoricalBarsQuery, TimeFrame};
 
-let query = HistoricalBarsQuery::new(vec!["AAPL"], TimeFrame::OneDay)
+let query = HistoricalBarsQuery::new(vec!["AAPL", "TSLA"], TimeFrame::OneDay)
     .start("2022-02-01") // date to start
     .end("2022-02-10") // date to end
     .feed("iex") // feed to use (iex is free, sip is premium). See Alpaca docs for more info
@@ -138,6 +133,8 @@ dbg!(&query);
 ### News
 
 ```rust
+use alpaca_api_client::market_data::news::NewsQuery;
+
 let query = NewsQuery::new(vec!["AAPL"])
     .include_content(true) // include content in the response
     .exclude_contentless(true) // exclude content less articles
@@ -235,6 +232,64 @@ dbg!(&query);
 ```
 
 </details>
+
+### Market Order
+
+```rust
+CreateOrderQuery::new("AAPL", OrderSide::Buy, OrderType::Market, TimeInForce::Day)
+    .qty("1")
+    .send(AccountType::Paper)
+    .unwrap();
+```
+
+### Trailing Stop Order
+
+```rust
+CreateOrderQuery::new(
+        "AAPL",
+        OrderSide::Buy,
+        OrderType::TrailingStop,
+        TimeInForce::GoodTilCanceled,
+    )
+    .qty("1")
+    .trail_percent("10")
+    .send(AccountType::Paper)
+    .unwrap();
+```
+
+### One Cancels the Other Order
+
+```rust
+CreateOrderQuery::new(
+        "AAPL",
+        OrderSide::Buy,
+        OrderType::Limit,
+        TimeInForce::GoodTilCanceled,
+    )
+    .qty("1")
+    .order_class(OrderClass::OneCancelsOther)
+    .take_profit(TakeProfit::new("199"))
+    .stop_loss(StopLoss::new("200", "201"))
+    .send(AccountType::Paper)
+    .unwrap();
+```
+
+### Bracket Order
+
+```rust
+CreateOrderQuery::new(
+        "AAPL",
+        OrderSide::Buy,
+        OrderType::Market,
+        TimeInForce::GoodTilCanceled,
+    )
+    .qty("1")
+    .order_class(OrderClass::Bracket)
+    .take_profit(TakeProfit::new("300"))
+    .stop_loss(StopLoss::new("200", "199"))
+    .send(AccountType::Paper)
+    .unwrap();
+```
 
 ## Contribution
 

@@ -1,5 +1,14 @@
-pub mod auctions;
-pub mod bars;
-pub mod quotes;
-pub mod snapshot;
-pub mod trades;
+mod auctions;
+pub use auctions::*;
+
+mod bars;
+pub use bars::*;
+
+mod quotes;
+pub use quotes::*;
+
+mod snapshot;
+pub use snapshot::*;
+
+mod trades;
+pub use trades::*;

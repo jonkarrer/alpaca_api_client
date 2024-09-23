@@ -1,5 +1,5 @@
 use super::{quotes::CryptoQuote, trades::CryptoTrade};
-use crate::{market_data::stocks::bars::StockBar, request};
+use crate::{market_data::stocks::StockBar, request};
 use serde::Deserialize;
 use std::collections::HashMap;
 
