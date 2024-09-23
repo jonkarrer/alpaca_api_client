@@ -1,7 +1,14 @@
-pub mod create;
-pub mod delete;
-pub mod get;
-pub mod replace;
+mod create;
+pub use create::*;
+
+mod delete;
+pub use delete::*;
+
+mod get;
+pub use get::*;
+
+mod replace;
+pub use replace::*;
 
 use serde::{Deserialize, Serialize};
 
@@ -42,4 +49,19 @@ pub struct Order {
     pub trail_percent: Option<String>,
     pub trail_price: Option<String>,
     pub hwm: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum OrderSide {
+    Buy,
+    Sell,
+}
+
+impl ToString for OrderSide {
+    fn to_string(&self) -> String {
+        match self {
+            OrderSide::Buy => "buy".to_string(),
+            OrderSide::Sell => "sell".to_string(),
+        }
+    }
 }

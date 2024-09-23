@@ -1,5 +1,5 @@
 use alpaca_api_client::trading::{
-    order::create::{
+    order::{
         CreateOrderQuery, OrderClass, OrderSide, OrderType, StopLoss, TakeProfit, TimeInForce,
     },
     AccountType,

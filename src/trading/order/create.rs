@@ -1,4 +1,4 @@
-use super::Order;
+use super::{Order, OrderSide};
 use crate::{request, trading::AccountType};
 use serde::{Deserialize, Serialize};
 
@@ -134,21 +134,6 @@ impl<'a> CreateOrderQuery<'a> {
 
         let order = response.into_json()?;
         Ok(order)
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub enum OrderSide {
-    Buy,
-    Sell,
-}
-
-impl ToString for OrderSide {
-    fn to_string(&self) -> String {
-        match self {
-            OrderSide::Buy => "buy".to_string(),
-            OrderSide::Sell => "sell".to_string(),
-        }
     }
 }
 

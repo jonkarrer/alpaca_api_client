@@ -1,5 +1,5 @@
 use alpaca_api_client::trading::{
-    order::delete::{delete_all_orders, delete_by_id},
+    order::{delete_all_orders, delete_by_id},
     AccountType,
 };
 

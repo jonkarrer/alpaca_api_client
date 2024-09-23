@@ -1,5 +1,5 @@
 use alpaca_api_client::{
-    market_data::crypto::bars::{HistoricalCryptoBarsQuery, LatestCryptoBarsQuery},
+    market_data::crypto::{HistoricalCryptoBarsQuery, LatestCryptoBarsQuery},
     TimeFrame,
 };
 

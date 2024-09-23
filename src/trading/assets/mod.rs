@@ -1,2 +1,5 @@
-pub mod assets;
-pub mod option_contracts;
+mod assets;
+pub use assets::*;
+
+mod option_contracts;
+pub use option_contracts::*;
