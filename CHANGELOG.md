@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2024-09-23
+
+### 🚀 Features
+
+- Quotes module
+- Trades module
+- Snapshots module
+- News module
+- Add crypto packages
+- Add account module
+
+### 🚜 Refactor
+
+- Rewrite bars module
+- Change pub scopes
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog
+- Update readme
+- Update readme
+- Add examples dir
+- Bump version
+
+### Add
+
+- Create an auctions module
+- Assets module
+- Option contracts
+- Create order
+- Test create order
+- Test get order
+- Test delete order
+- Replace order
+- Position module
+- Portfolio module
+- Account configs
+- Activity module
+- Calendar module
+- Clock module
+- Screener module
+
 ## [0.5.0] - 2024-03-25
 
 ### Miscellaneous Tasks
