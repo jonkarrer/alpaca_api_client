@@ -112,7 +112,7 @@ impl<'a> HistoricalBarsQuery<'a> {
         self
     }
 
-    fn build(self) -> String {
+    fn build(&self) -> String {
         let mut query = format!(
             "symbols={}&timeframe={}",
             self.symbols.join(","),
@@ -124,11 +124,17 @@ impl<'a> HistoricalBarsQuery<'a> {
         if let Some(end) = self.end {
             query.push_str(&format!("&end={end}"));
         }
+        if let Some(limit) = self.limit {
+            query.push_str(&format!("&limit={limit}"));
+        }
         if let Some(feed) = self.feed {
             query.push_str(&format!("&feed={feed}"));
         }
         if let Some(currency) = self.currency {
             query.push_str(&format!("&currency={currency}"));
+        }
+        if let Some(asof) = self.asof {
+            query.push_str(&format!("&asof={asof}"));
         }
         if self.sort_asc {
             query.push_str("&sort=asc");
@@ -139,12 +145,22 @@ impl<'a> HistoricalBarsQuery<'a> {
         format!("{}?{}", self.url, query)
     }
 
-    pub fn send(self) -> Result<HistoricalBars, ureq::Error> {
+    pub fn send(&self) -> Result<HistoricalBars, ureq::Error> {
         let route = self.build();
         let mut multi_bars: HistoricalBars = HashMap::new();
         let mut page_token = None;
 
+        let mut bar_count = 0;
+        let limit = if let Some(limit) = self.limit {
+            limit
+        } else {
+            1000 // Default limit is 1000
+        };
+
         loop {
+            if bar_count >= limit {
+                break;
+            }
             // If a token exists, append to address
             let temp_address = match page_token {
                 Some(token) => format!("{}&page_token={}", &route, &token),
@@ -155,6 +171,7 @@ impl<'a> HistoricalBarsQuery<'a> {
 
             // Add multi_bars to collection
             for (symbol, bars) in response.bars {
+                bar_count += bars.len() as i32;
                 multi_bars.entry(symbol).or_insert(Vec::new()).extend(bars);
             }
 
@@ -225,8 +242,9 @@ mod tests {
     fn test_historical_bar_query() {
         let res = HistoricalBarsQuery::new(vec!["AAPL"], TimeFrame::OneDay)
             .start("2022-02-01")
-            .end("2022-02-10")
+            .end("2022-03-10")
             .feed("iex")
+            .limit(2)
             .send()
             .unwrap();
 
