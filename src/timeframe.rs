@@ -1,7 +1,7 @@
 use std::{io::Error, str::FromStr};
 
 /// Timeframe options utility for time frames accepted by alpaca api
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum TimeFrame {
     OneMinute,
     FiveMinutes,

@@ -150,17 +150,7 @@ impl<'a> HistoricalBarsQuery<'a> {
         let mut multi_bars: HistoricalBars = HashMap::new();
         let mut page_token = None;
 
-        let mut bar_count = 0;
-        let limit = if let Some(limit) = self.limit {
-            limit
-        } else {
-            1000 // Default limit is 1000
-        };
-
         loop {
-            if bar_count >= limit {
-                break;
-            }
             // If a token exists, append to address
             let temp_address = match page_token {
                 Some(token) => format!("{}&page_token={}", &route, &token),
@@ -171,7 +161,6 @@ impl<'a> HistoricalBarsQuery<'a> {
 
             // Add multi_bars to collection
             for (symbol, bars) in response.bars {
-                bar_count += bars.len() as i32;
                 multi_bars.entry(symbol).or_insert(Vec::new()).extend(bars);
             }
 
