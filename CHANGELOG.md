@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2024-10-22
+
+### 🐛 Bug Fixes
+
+- Limit logic blocking multi bar queries
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump version
+
 ## [0.6.1] - 2024-10-21
 
 ### 🚀 Features
