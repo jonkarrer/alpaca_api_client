@@ -1,4 +1,6 @@
 mod create;
+use std::str::FromStr;
+
 pub use create::*;
 
 mod delete;
@@ -51,7 +53,7 @@ pub struct Order {
     pub hwm: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum OrderSide {
     Buy,
     Sell,
@@ -62,6 +64,20 @@ impl ToString for OrderSide {
         match self {
             OrderSide::Buy => "buy".to_string(),
             OrderSide::Sell => "sell".to_string(),
+        }
+    }
+}
+
+impl FromStr for OrderSide {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "buy" => Ok(OrderSide::Buy),
+            "sell" => Ok(OrderSide::Sell),
+            "Buy" => Ok(OrderSide::Buy),
+            "Sell" => Ok(OrderSide::Sell),
+            _ => Err(()),
         }
     }
 }

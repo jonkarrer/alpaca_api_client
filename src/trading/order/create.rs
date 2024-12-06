@@ -137,7 +137,7 @@ impl<'a> CreateOrderQuery<'a> {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum OrderType {
     Market,
     Limit,
@@ -158,7 +158,7 @@ impl ToString for OrderType {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum TimeInForce {
     Day,
     GoodTilCanceled,
@@ -181,7 +181,7 @@ impl ToString for TimeInForce {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum OrderClass {
     Simple,
     Bracket,

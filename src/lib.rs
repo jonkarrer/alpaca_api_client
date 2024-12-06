@@ -10,6 +10,9 @@ pub use timeframe::TimeFrame;
 mod trend;
 pub use trend::Trend;
 
+mod stream;
+pub use stream::*;
+
 fn request(method: &str, address: &str) -> Request {
     dotenv().ok();
     let id_key = std::env::var("APCA_API_KEY_ID").expect("API Id Key Not Found");
