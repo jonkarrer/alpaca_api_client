@@ -21,6 +21,7 @@ pub struct AccountConfiguration {
 pub struct Account {
     pub id: String,
     pub admin_configurations: HashMap<String, String>,
+    #[serde(deserialize_with = "crate::serde::deserialize_to_string_map")]
     pub user_configurations: Option<HashMap<String, String>>,
     pub account_number: String,
     pub status: String,
