@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-02-10
+
+### 🚀 Features
+
+- Fix tests
+- Update readme
+
+### 🐛 Bug Fixes
+
+- User_configurations failing to deserialize
+
+### 💼 Other
+
+- Fix ureq issues
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump version
+- Bump version
+
 ## [0.6.4] - 2025-05-08
 
 ### 🐛 Bug Fixes
