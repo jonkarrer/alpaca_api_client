@@ -49,7 +49,7 @@ impl<'a> PositionsQuery<'a> {
 
     pub fn get_all_open_positions(&self) -> Result<AllPositions, ureq::Error> {
         let response = request("GET", self.url).call()?;
-        let positions = response.into_json()?;
+        let positions = response.into_body().read_json()?;
 
         Ok(positions)
     }
@@ -57,7 +57,7 @@ impl<'a> PositionsQuery<'a> {
     pub fn get_position_by_symbol(&self, symbol: &'a str) -> Result<Position, ureq::Error> {
         let route = format!("{}/{}", self.url, symbol);
         let response = request("GET", &route).call()?;
-        let position = response.into_json()?;
+        let position = response.into_body().read_json()?;
 
         Ok(position)
     }
@@ -65,7 +65,7 @@ impl<'a> PositionsQuery<'a> {
     pub fn get_position_by_id(&self, id: &'a str) -> Result<Position, ureq::Error> {
         let route = format!("{}/{}", self.url, id);
         let response = request("GET", &route).call()?;
-        let position = response.into_json()?;
+        let position = response.into_body().read_json()?;
 
         Ok(position)
     }
@@ -76,13 +76,14 @@ impl<'a> PositionsQuery<'a> {
     ) -> Result<AllClosedPositions, ureq::Error> {
         let query = format!("?cancel_orders={}", cancel_orders);
         let route = format!("{}{}", self.url, query);
-        let response: ureq::Response = request("DELETE", &route).call()?;
+        let response = request("DELETE", &route).call()?;
 
-        if response.status() != 200 && response.status() != 207 {
-            return Err(ureq::Error::from(response));
+        let status = response.status().as_u16();
+        if status != 200 && status != 207 {
+            return Err(ureq::Error::StatusCode(status));
         }
 
-        Ok(response.into_json()?)
+        Ok(response.into_body().read_json()?)
     }
 
     pub fn close_position_by_id_or_symbol(
@@ -101,7 +102,7 @@ impl<'a> PositionsQuery<'a> {
         }
         let route = format!("{}?{}", url, query);
         let response = request("DELETE", &route).call()?;
-        let position = response.into_json()?;
+        let position = response.into_body().read_json()?;
 
         Ok(position)
     }

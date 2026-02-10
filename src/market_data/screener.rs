@@ -54,7 +54,7 @@ impl<'a> ActiveStocksQuery<'a> {
     pub fn send(self) -> Result<Vec<ActiveStock>, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let stocks: ActiveStocksResponse = response.into_json()?;
+        let stocks: ActiveStocksResponse = response.into_body().read_json()?;
         Ok(stocks.most_actives)
     }
 }
@@ -121,7 +121,7 @@ impl TopMoversQuery {
     pub fn send(self) -> Result<TopMoverResponse, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let movers: TopMoverResponse = response.into_json()?;
+        let movers: TopMoverResponse = response.into_body().read_json()?;
         Ok(movers)
     }
 }

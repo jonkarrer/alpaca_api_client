@@ -142,7 +142,7 @@ impl<'a> NewsQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: NewsResponse = response.into_json()?;
+            let response: NewsResponse = response.into_body().read_json()?;
             i += response.news.len() as i32;
             news.extend(response.news);
 

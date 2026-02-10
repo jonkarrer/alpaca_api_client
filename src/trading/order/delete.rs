@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use ureq::Response;
 
 use crate::{request, trading::AccountType};
 
@@ -15,16 +14,18 @@ pub fn delete_all_orders(account_type: AccountType) -> Result<Vec<DeleteOrderRes
         AccountType::Paper => "https://paper-api.alpaca.markets/v2/orders",
     };
     let response = request("DELETE", url).call()?;
-    let orders: Vec<DeleteOrderResult> = response.into_json()?;
+    let orders: Vec<DeleteOrderResult> = response.into_body().read_json()?;
     Ok(orders)
 }
 
-pub fn delete_by_id(id: &str, account_type: AccountType) -> Result<Response, ureq::Error> {
+/// Returns the HTTP status code on success
+pub fn delete_by_id(id: &str, account_type: AccountType) -> Result<u16, ureq::Error> {
     let url = match account_type {
         AccountType::Live => format!("https://api.alpaca.markets/v2/orders/{}", id),
         AccountType::Paper => format!("https://paper-api.alpaca.markets/v2/orders/{}", id),
     };
-    request("DELETE", &url).call()
+    let response = request("DELETE", &url).call()?;
+    Ok(response.status().as_u16())
 }
 
 #[cfg(test)]
@@ -42,7 +43,7 @@ mod tests {
     #[test]
     fn test_delete_order_by_id() {
         //! Will fail if the id is not found
-        let res = delete_by_id("52fec271-0b23-4f79-8ab4-97e9981879fc", AccountType::Paper).unwrap();
-        assert!(res.status() == 204);
+        let status = delete_by_id("52fec271-0b23-4f79-8ab4-97e9981879fc", AccountType::Paper).unwrap();
+        assert!(status == 204);
     }
 }

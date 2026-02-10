@@ -153,7 +153,7 @@ impl<'a> ActivitiesQuery<'a> {
             };
 
             let response = request("GET", &temp_address).call()?;
-            let response: TradeActivities = response.into_json()?;
+            let response: TradeActivities = response.into_body().read_json()?;
             let returned_page_size = response.len();
 
             for (index, item) in response.into_iter().enumerate() {

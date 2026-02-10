@@ -46,14 +46,14 @@ impl<'a> AssetsQuery<'a> {
     pub fn get_by_id(self, id: &'a str) -> Result<Asset, ureq::Error> {
         let route = format!("{}/{}", self.url, id);
         let response = request("GET", &route).call()?;
-        let asset: Asset = response.into_json()?;
+        let asset: Asset = response.into_body().read_json()?;
         Ok(asset)
     }
 
     pub fn get_by_symbol(self, symbol: &'a str) -> Result<Asset, ureq::Error> {
         let route = format!("{}/{}", self.url, symbol);
         let response = request("GET", &route).call()?;
-        let asset: Asset = response.into_json()?;
+        let asset: Asset = response.into_body().read_json()?;
         Ok(asset)
     }
 
@@ -98,7 +98,7 @@ impl<'a> AssetsQuery<'a> {
     pub fn send(self) -> Result<AllAssets, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let assets: AllAssets = response.into_json()?;
+        let assets: AllAssets = response.into_body().read_json()?;
         Ok(assets)
     }
 }

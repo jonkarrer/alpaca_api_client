@@ -1,7 +1,7 @@
 use serde::Serialize;
 
 use super::{create::TimeInForce, Order};
-use crate::{request, trading::AccountType};
+use crate::{json_request, trading::AccountType};
 
 #[derive(Serialize, Debug)]
 pub struct ReplaceOrderQuery<'a> {
@@ -78,11 +78,11 @@ impl<'a> ReplaceOrderQuery<'a> {
                 self.order_id
             ),
         };
-        let response = request("PATCH", &url)
-            .set("Content-Type", "application/json")
+        let response = json_request("PATCH", &url)
+            .header("Content-Type", "application/json")
             .send_json(&self)?;
 
-        let order = response.into_json()?;
+        let order = response.into_body().read_json()?;
         Ok(order)
     }
 }

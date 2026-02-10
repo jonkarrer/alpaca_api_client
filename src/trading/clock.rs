@@ -18,7 +18,7 @@ pub fn get_market_clock(account_type: AccountType) -> Result<MarketClock, ureq::
     };
 
     let response = request("GET", url).call()?;
-    Ok(response.into_json()?)
+    Ok(response.into_body().read_json()?)
 }
 
 #[cfg(test)]

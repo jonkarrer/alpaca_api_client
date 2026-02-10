@@ -90,7 +90,7 @@ impl<'a> OptionSnapshotQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: OptionSnapshotResponse = response.into_json()?;
+            let response: OptionSnapshotResponse = response.into_body().read_json()?;
 
             // Add snapshots to collection
             for (symbol, snapshot) in response.snapshots {

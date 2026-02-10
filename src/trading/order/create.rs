@@ -1,5 +1,5 @@
 use super::{Order, OrderSide};
-use crate::{request, trading::AccountType};
+use crate::{json_request, trading::AccountType};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -128,11 +128,11 @@ impl<'a> CreateOrderQuery<'a> {
             AccountType::Paper => "https://paper-api.alpaca.markets/v2/orders",
         };
 
-        let response = request("POST", url)
-            .set("Content-Type", "application/json")
+        let response = json_request("POST", url)
+            .header("Content-Type", "application/json")
             .send_json(&self)?;
 
-        let order = response.into_json()?;
+        let order = response.into_body().read_json()?;
         Ok(order)
     }
 }

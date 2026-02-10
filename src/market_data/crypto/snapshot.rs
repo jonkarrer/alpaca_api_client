@@ -41,7 +41,7 @@ impl<'a> SnapshotsQuery<'a> {
         let route = self.build();
         dbg!(&route);
         let response = request("GET", &route).call()?;
-        let response: CryptoSnapshotsResponse = response.into_json()?;
+        let response: CryptoSnapshotsResponse = response.into_body().read_json()?;
         Ok(response.snapshots)
     }
 }

@@ -101,7 +101,7 @@ impl<'a> HistoricalCryptoBarsQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalBarsResponse = response.into_json()?;
+            let response: HistoricalBarsResponse = response.into_body().read_json()?;
 
             // Add multi_bars to collection
             for (symbol, bars) in response.bars {
@@ -136,7 +136,7 @@ impl<'a> LatestCryptoBarsQuery<'a> {
         let route = self.build();
         let response = request("GET", &route).call()?;
 
-        let response: LatestBarsResponse = response.into_json()?;
+        let response: LatestBarsResponse = response.into_body().read_json()?;
 
         let mut latest_bars: LatestBars = HashMap::new();
 

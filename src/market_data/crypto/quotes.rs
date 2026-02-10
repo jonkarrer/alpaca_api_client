@@ -125,7 +125,7 @@ impl<'a> HistoricalCryptoQuotesQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalCryptoQuoteResponse = response.into_json()?;
+            let response: HistoricalCryptoQuoteResponse = response.into_body().read_json()?;
 
             // Add quotes to collection
             for (symbol, quote) in response.quotes {
@@ -160,7 +160,7 @@ impl<'a> LatestCryptoQuotesQuery<'a> {
     pub fn send(self) -> Result<LatestCryptoQuotes, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: LatestCryptoQuoteResponse = response.into_json()?;
+        let response: LatestCryptoQuoteResponse = response.into_body().read_json()?;
         Ok(response.quotes)
     }
 }

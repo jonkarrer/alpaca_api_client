@@ -220,7 +220,7 @@ impl<'a> OptionContractsQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: OptionContractsResponse = response.into_json()?;
+            let response: OptionContractsResponse = response.into_body().read_json()?;
 
             // Add option_contracts to collection
             for contract in response.option_contracts {
@@ -241,14 +241,14 @@ impl<'a> OptionContractsQuery<'a> {
     pub fn get_by_id(self, id: &'a str) -> Result<OptionContract, ureq::Error> {
         let route = format!("{}/{}", self.url, id);
         let response = request("GET", &route).call()?;
-        let asset: OptionContract = response.into_json()?;
+        let asset: OptionContract = response.into_body().read_json()?;
         Ok(asset)
     }
 
     pub fn get_by_symbol(self, symbol: &'a str) -> Result<OptionContract, ureq::Error> {
         let route = format!("{}/{}", self.url, symbol);
         let response = request("GET", &route).call()?;
-        let asset: OptionContract = response.into_json()?;
+        let asset: OptionContract = response.into_body().read_json()?;
         Ok(asset)
     }
 }

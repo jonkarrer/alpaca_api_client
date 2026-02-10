@@ -146,7 +146,7 @@ impl<'a> HistoricalAuctionsQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalAuctionResponse = response.into_json()?;
+            let response: HistoricalAuctionResponse = response.into_body().read_json()?;
 
             // Add auctions to collection
             for (symbol, auction) in response.auctions {

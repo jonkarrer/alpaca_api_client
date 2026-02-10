@@ -64,7 +64,7 @@ impl<'a> CalendarQuery<'a> {
     pub fn send(self) -> Result<Calendar, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: Calendar = response.into_json()?;
+        let response: Calendar = response.into_body().read_json()?;
         Ok(response)
     }
 }

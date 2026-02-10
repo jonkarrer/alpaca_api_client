@@ -52,7 +52,7 @@ impl<'a> LatestOptionQuotesQuery<'a> {
     pub fn send(self) -> Result<LatestOptionQuotes, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: LatestOptionQuotesResponse = response.into_json()?;
+        let response: LatestOptionQuotesResponse = response.into_body().read_json()?;
         Ok(response.quotes)
     }
 }

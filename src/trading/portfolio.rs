@@ -129,7 +129,7 @@ impl<'a> PortfolioHistoryQuery<'a> {
     pub fn send(self) -> Result<PortfolioHistory, ureq::Error> {
         let url = self.build();
         let response = request("GET", &url).call()?;
-        Ok(response.into_json()?)
+        Ok(response.into_body().read_json()?)
     }
 }
 

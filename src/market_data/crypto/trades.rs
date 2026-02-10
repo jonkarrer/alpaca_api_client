@@ -126,7 +126,7 @@ impl<'a> HistoricalCryptoTradesQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalCryptoTradesResponse = response.into_json()?;
+            let response: HistoricalCryptoTradesResponse = response.into_body().read_json()?;
 
             // Add trades to collection
             for (symbol, trade) in response.trades {
@@ -162,7 +162,7 @@ impl<'a> LatestCryptoTradesQuery<'a> {
     pub fn send(self) -> Result<LatestCryptoTrades, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: LatestCryptoTradesResponse = response.into_json()?;
+        let response: LatestCryptoTradesResponse = response.into_body().read_json()?;
         Ok(response.trades)
     }
 }

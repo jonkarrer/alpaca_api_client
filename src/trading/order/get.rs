@@ -104,14 +104,14 @@ impl<'a> GetOrdersQuery<'a> {
     pub fn get_by_id(self, id: &'a str, nested: bool) -> Result<Order, ureq::Error> {
         let route = format!("{}/{}?&nested={}", self.url, id, nested);
         let response = request("GET", &route).call()?;
-        let orders: Order = response.into_json()?;
+        let orders: Order = response.into_body().read_json()?;
         Ok(orders)
     }
 
     pub fn send(self) -> Result<AllOrders, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let orders: AllOrders = response.into_json()?;
+        let orders: AllOrders = response.into_body().read_json()?;
         Ok(orders)
     }
 }

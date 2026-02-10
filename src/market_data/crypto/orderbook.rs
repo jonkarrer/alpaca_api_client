@@ -43,7 +43,7 @@ impl<'a> OrderbookQuery<'a> {
     pub fn send(self) -> Result<Orderbooks, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: OrderbookResponse = response.into_json()?;
+        let response: OrderbookResponse = response.into_body().read_json()?;
         Ok(response.orderbooks)
     }
 }

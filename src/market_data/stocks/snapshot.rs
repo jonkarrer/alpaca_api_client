@@ -57,7 +57,7 @@ impl<'a> SnapshotsQuery<'a> {
     pub fn send(self) -> Result<Snapshots, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: Snapshots = response.into_json()?;
+        let response: Snapshots = response.into_body().read_json()?;
         Ok(response)
     }
 }

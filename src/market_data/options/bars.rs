@@ -96,7 +96,7 @@ impl<'a> HistoricalOptionBarsQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalBarsResponse = response.into_json()?;
+            let response: HistoricalBarsResponse = response.into_body().read_json()?;
 
             // Add multi_bars to collection
             for (symbol, bars) in response.bars {

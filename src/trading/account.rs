@@ -1,4 +1,4 @@
-use crate::request;
+use crate::{json_request, request};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -68,7 +68,7 @@ pub fn get_account(account_type: AccountType) -> Result<Account, ureq::Error> {
         AccountType::Paper => "https://paper-api.alpaca.markets/v2/account",
     };
     let response = request("GET", &url).call()?;
-    Ok(response.into_json()?)
+    Ok(response.into_body().read_json()?)
 }
 
 pub fn get_account_configurations(
@@ -79,7 +79,7 @@ pub fn get_account_configurations(
         AccountType::Paper => "https://paper-api.alpaca.markets/v2/account/configurations",
     };
     let response = request("GET", &url).call()?;
-    Ok(response.into_json()?)
+    Ok(response.into_body().read_json()?)
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -178,11 +178,11 @@ impl<'a> PatchAccountConfigQuery<'a> {
             AccountType::Paper => "https://paper-api.alpaca.markets/v2/account/configurations",
         };
 
-        let response = request("PATCH", url)
-            .set("Content-Type", "application/json")
+        let response = json_request("PATCH", url)
+            .header("Content-Type", "application/json")
             .send_json(&self)?;
 
-        Ok(response.into_json()?)
+        Ok(response.into_body().read_json()?)
     }
 }
 

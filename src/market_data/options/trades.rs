@@ -127,7 +127,7 @@ impl<'a> HistoricalOptionTradesQuery<'a> {
                 _ => route.clone(),
             };
             let response = request("GET", &temp_address).call()?;
-            let response: HistoricalOptionTradesResponse = response.into_json()?;
+            let response: HistoricalOptionTradesResponse = response.into_body().read_json()?;
 
             // Add trades to collection
             for (symbol, trade) in response.trades {
@@ -173,7 +173,7 @@ impl<'a> LatestOptionTradesQuery<'a> {
     pub fn send(self) -> Result<LatestOptionTrades, ureq::Error> {
         let route = self.build();
         let response = request("GET", &route).call()?;
-        let response: LatestOptionTradesResponse = response.into_json()?;
+        let response: LatestOptionTradesResponse = response.into_body().read_json()?;
         Ok(response.trades)
     }
 }
