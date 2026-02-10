@@ -1,6 +1,6 @@
 [package]
 name = "alpaca_api_client"
-version = "0.7.0"
+version = "0.8.0"
 edition = "2024"
 authors=["Jon Karrer <karrerjon@gmail.com>"]
 description = "Unofficial Alpaca API Client"
@@ -15,3 +15,4 @@ dotenvy = "0.15.7"
 serde = {version = "1.0.228", features = ["derive"]}
 serde_json = "1.0.149"
 ureq = { version = "3.2.0", features = ["json"] }
+tungstenite = { version = "0.24", features = ["native-tls"] }
