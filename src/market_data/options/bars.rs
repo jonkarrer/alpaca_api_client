@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn test_historical_option_bars_query() {
-        let test_symbol = "AAPL241220C00300000";
+        let test_symbol = "AAPL261218C00200000";
         let res = HistoricalOptionBarsQuery::new(vec![test_symbol], TimeFrame::OneDay)
             .send()
             .unwrap();

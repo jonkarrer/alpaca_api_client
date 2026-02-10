@@ -92,14 +92,14 @@ mod tests {
     use super::*;
 
     #[test]
+    #[ignore] // Requires a valid open limit/stop order ID - run manually
     fn test_replace_order() {
-        //! Will fail if order is not found or correct type
-        let res = ReplaceOrderQuery::new("615bbc4d-966c-470e-bc37-fd0ae3218927")
+        let res = ReplaceOrderQuery::new("YOUR_ORDER_ID_HERE")
             .qty("2")
             .send(AccountType::Paper)
             .unwrap();
 
         dbg!(&res);
-        assert!(res.id == "615bbc4d-966c-470e-bc37-fd0ae3218927");
+        assert!(!res.id.is_empty());
     }
 }

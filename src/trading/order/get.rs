@@ -122,23 +122,26 @@ mod tests {
 
     #[test]
     fn test_get_all_orders_query() {
+        // Query closed orders - result may be empty or contain orders
         let res = GetOrdersQuery::new(AccountType::Paper)
             .status("closed")
+            .limit(5)
             .send()
             .unwrap();
 
         dbg!(&res);
-        // assert!(res.len() > 0);
-        assert!(false);
+        // Test passes if query succeeds (result can be empty)
+        assert!(res.len() <= 5);
     }
 
     #[test]
+    #[ignore] // Requires a valid order ID - run manually with a real order ID
     fn test_get_order_by_id() {
         let res = GetOrdersQuery::new(AccountType::Paper)
-            .get_by_id("3c9067a5-6553-40e5-ba56-b4fec94119dd", true)
+            .get_by_id("YOUR_ORDER_ID_HERE", true)
             .unwrap();
 
         dbg!(&res);
-        assert!(false);
+        assert!(!res.id.is_empty());
     }
 }

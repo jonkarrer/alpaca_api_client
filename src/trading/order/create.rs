@@ -331,18 +331,20 @@ mod tests {
     }
 
     #[test]
+    #[ignore] // OCO orders require an existing position - run manually when you have one
     fn test_create_oco_order() {
-        //! Will fail if a bracket order is not filled yet
+        // OCO (One-Cancels-Other) requires an existing position to close
         let order = CreateOrderQuery::new(
             "AAPL",
-            OrderSide::Buy,
+            OrderSide::Sell, // Selling to close a position
             OrderType::Limit,
             TimeInForce::GoodTilCanceled,
         )
         .qty("1")
+        .limit_price("200")
         .order_class(OrderClass::OneCancelsOther)
-        .take_profit(TakeProfit::new("199"))
-        .stop_loss(StopLoss::new("200", "201"))
+        .take_profit(TakeProfit::new("210"))
+        .stop_loss(StopLoss::new("190", "189"))
         .send(AccountType::Paper)
         .unwrap();
 

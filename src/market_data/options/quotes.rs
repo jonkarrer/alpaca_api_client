@@ -63,12 +63,12 @@ mod tests {
 
     #[test]
     fn test_latest_option_quotes_query() {
-        let res = LatestOptionQuotesQuery::new(vec!["AAPL241220C00300000"])
+        let res = LatestOptionQuotesQuery::new(vec!["AAPL261218C00200000"])
             .feed("indicative")
             .send()
             .unwrap();
 
         dbg!(&res);
-        assert!(res.contains_key("AAPL241220C00300000"));
+        assert!(res.contains_key("AAPL261218C00200000"));
     }
 }

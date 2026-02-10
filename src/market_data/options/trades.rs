@@ -184,21 +184,21 @@ mod tests {
 
     #[test]
     fn test_historical_option_trade_query() {
-        let res = HistoricalOptionTradesQuery::new(vec!["AAPL241220C00300000"])
+        let res = HistoricalOptionTradesQuery::new(vec!["AAPL261218C00200000"])
             .limit(10)
             .send()
             .unwrap();
         dbg!(&res);
-        assert!(res.contains_key("AAPL241220C00300000"));
+        assert!(res.contains_key("AAPL261218C00200000"));
     }
 
     #[test]
     fn test_latest_option_trade_query() {
-        let res = LatestOptionTradesQuery::new(vec!["AAPL241220C00300000"])
+        let res = LatestOptionTradesQuery::new(vec!["AAPL261218C00200000"])
             .feed("indicative")
             .send()
             .unwrap();
         dbg!(&res);
-        assert!(res.contains_key("AAPL241220C00300000"));
+        assert!(res.contains_key("AAPL261218C00200000"));
     }
 }

@@ -114,10 +114,10 @@ mod tests {
 
     #[test]
     fn test_option_snapshot_query() {
-        let res = OptionSnapshotQuery::new(vec!["AAPL241220C00300000"])
+        let res = OptionSnapshotQuery::new(vec!["AAPL261218C00200000"])
             .send()
             .unwrap();
         dbg!(&res);
-        assert!(res.contains_key("AAPL241220C00300000"));
+        assert!(res.contains_key("AAPL261218C00200000"));
     }
 }
